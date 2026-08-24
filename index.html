@@ -75,6 +75,8 @@ input,select,textarea{font-family:inherit;outline:none;}
 .section-title:first-child{margin-top:0;}
 .kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:6px;}
 .kpi{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:14px;text-align:center;}
+.kpi[data-a]{cursor:pointer;transition:transform .1s;}
+.kpi[data-a]:active{transform:scale(.96);}
 .kpi b{display:block;font-size:20px;font-weight:900;color:var(--blue);}
 .kpi span{font-size:11px;color:var(--muted);}
 .empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;}
@@ -508,15 +510,15 @@ function rHome(){
 
   let quick = '';
   if(u.role==='requester' || u.role==='admin'){
-    quick += `<div class="kpi-row"><div class="kpi"><b>${myReqs.length}</b><span>طلباتي</span></div><div class="kpi"><b>${myReqs.filter(r=>r.status==='delivered').length}</b><span>تم التسليم</span></div></div>`;
+    quick += `<div class="kpi-row"><div class="kpi" data-a="kpi-modal" data-kpi="my-requests"><b>${myReqs.length}</b><span>طلباتي</span></div><div class="kpi" data-a="kpi-modal" data-kpi="my-delivered"><b>${myReqs.filter(r=>r.status==='delivered').length}</b><span>تم التسليم</span></div></div>`;
   }
   if(u.role==='warehouse' || u.role==='admin'){
-    quick += `<div class="kpi-row"><div class="kpi"><b>${pendingWh.length}</b><span>طلبات بانتظار المخزن</span></div><div class="kpi"><b>${zeroStock}</b><span>أصناف نفدت</span></div></div>`;
+    quick += `<div class="kpi-row"><div class="kpi" data-a="kpi-modal" data-kpi="pending-warehouse"><b>${pendingWh.length}</b><span>طلبات بانتظار المخزن</span></div><div class="kpi" data-a="kpi-modal" data-kpi="zero-stock"><b>${zeroStock}</b><span>أصناف نفدت</span></div></div>`;
   }
   if(u.role==='distribution' || u.role==='admin'){
-    quick += `<div class="kpi-row"><div class="kpi"><b>${myTasks.length}</b><span>مهام تسليم لديك</span></div><div class="kpi"><b>${DB.requests.filter(r=>r.status==='delivered'&&r.assignedTo===u.username).length}</b><span>تم تسليمها</span></div></div>`;
+    quick += `<div class="kpi-row"><div class="kpi" data-a="kpi-modal" data-kpi="my-tasks"><b>${myTasks.length}</b><span>مهام تسليم لديك</span></div><div class="kpi" data-a="kpi-modal" data-kpi="my-tasks-delivered"><b>${DB.requests.filter(r=>r.status==='delivered'&&r.assignedTo===u.username).length}</b><span>تم تسليمها</span></div></div>`;
   }
-  quick += `<div class="kpi-row"><div class="kpi"><b>${DB.products.length}</b><span>إجمالي الأصناف</span></div><div class="kpi"><b>${lowStock}</b><span>أصناف منخفضة</span></div></div>`;
+  quick += `<div class="kpi-row"><div class="kpi" data-a="kpi-modal" data-kpi="total-products"><b>${DB.products.length}</b><span>إجمالي الأصناف</span></div><div class="kpi" data-a="kpi-modal" data-kpi="low-stock"><b>${lowStock}</b><span>أصناف منخفضة</span></div></div>`;
 
   const recent = [...DB.requests].sort((a,b)=>b.createdAt-a.createdAt).slice(0,5);
 
@@ -530,6 +532,7 @@ function rHome(){
 
 function reqCardHTML(r){
   const itemsHTML = r.items.map(it=>`<div><span>${it.name}</span><span>${it.qty} ${it.unit}</span></div>`).join('');
+  const canCancel = S.user && S.user.role==='admin' && (r.status==='pending_warehouse' || r.status==='assigned_distribution');
   return `<div class="req-card">
     <div class="rh"><b>${r.doctorName}</b><span class="pill ${statusPillClass(r.status)}">${statusLabel(r.status)}</span></div>
     <div class="meta">طلب رقم ${r.id.slice(-6)} — ${fmtDateTime(r.createdAt)} — بواسطة ${r.createdByName} — قطاع ${reqSector(r)}</div>
@@ -538,6 +541,7 @@ function reqCardHTML(r){
     ${r.place?`<div class="meta">📍 مكان التسليم: ${r.place}</div>`:''}
     ${r.notes?`<div class="meta">ملاحظات: ${r.notes}</div>`:''}
     ${r.status==='rejected' && r.rejectReason?`<div class="meta" style="color:var(--bad);">سبب الرفض: ${r.rejectReason}</div>`:''}
+    ${canCancel?`<div class="req-actions"><button class="btn-s r" data-a="admin-cancel-req" data-id="${r.id}">❌ إلغاء الطلب</button></div>`:''}
   </div>`;
 }
 
@@ -1069,6 +1073,10 @@ function onAction(e){
   else if(a==='wh-direct'){ warehouseDirectDeliver(id); }
   else if(a==='wh-assign'){ openAssignModal(id); }
   else if(a==='wh-reject'){ warehouseReject(id); }
+  else if(a==='admin-cancel-req'){ adminCancelRequest(id); }
+  else if(a==='kpi-modal'){ openKpiModal(e.currentTarget.dataset.kpi); }
+  else if(a==='kpi-export-excel'){ exportExcel(kpiModalRows, kpiModalFile); }
+  else if(a==='kpi-export-print'){ printReport(kpiModalRows, kpiModalTitle); }
   else if(a==='dist-deliver'){ distDeliver(id); }
   else if(a==='admin-tab'){ adminTab = e.currentTarget.dataset.t; render(); }
   else if(a==='add-user'){ addUser(); }
@@ -1162,6 +1170,24 @@ function warehouseReject(id){
   toast('تم رفض الطلب');
   render();
 }
+function adminCancelRequest(id){
+  const r = DB.requests.find(x=>x.id===id);
+  if(!r) return;
+  if(r.status==='delivered'){ toast('لا يمكن إلغاء طلب تم تسليمه بالفعل'); return; }
+  if(r.status==='rejected'){ toast('الطلب ملغى بالفعل'); return; }
+  if(!confirm('هل أنت متأكد من إلغاء هذا الطلب؟')) return;
+  if(r.status==='assigned_distribution'){
+    // stock was already deducted when the request was assigned — restore it
+    r.items.forEach(it=>{ const p=findProduct(it.productId); if(p) p.stock += Number(it.qty||0); });
+    saveProducts();
+  }
+  r.status='rejected';
+  r.rejectReason = 'تم الإلغاء بواسطة الإدارة';
+  r.cancelledBy = S.user.username; r.cancelledAt = Date.now();
+  saveRequests();
+  toast('تم إلغاء الطلب' + (r.items ? ' وإرجاع الرصيد إن لزم' : ''));
+  render();
+}
 function openAssignModal(id){
   const distUsers = DB.users.filter(u=>u.role==='distribution');
   const bg = document.createElement('div');
@@ -1179,7 +1205,55 @@ function openAssignModal(id){
   bg.querySelector('[data-a="confirm-assign"]').addEventListener('click', ()=>confirmAssign(id));
 }
 function closeModal(){
-  ['assign-modal-bg','edit-user-modal-bg','picker-modal-bg'].forEach(id=>{ const m=document.getElementById(id); if(m) m.remove(); });
+  ['assign-modal-bg','edit-user-modal-bg','picker-modal-bg','kpi-modal-bg'].forEach(id=>{ const m=document.getElementById(id); if(m) m.remove(); });
+}
+
+/* ---------------- HOME KPI QUICK REPORTS ---------------- */
+let kpiModalRows = [];
+let kpiModalFile = 'تقرير';
+let kpiModalTitle = 'تقرير';
+function kpiRowsFor(type){
+  const u = S.user;
+  const myReqs = DB.requests.filter(r=> r.createdBy===u.username );
+  const pendingWh = DB.requests.filter(r=>r.status==='pending_warehouse');
+  const myTasks = DB.requests.filter(r=> r.status==='assigned_distribution' && r.assignedTo===u.username );
+  const prodRow = p => ({'الصنف':p.name,'القطاع':p.sector||'عام','الوحدة':p.unit,'الرصيد':p.stock});
+  const reqRow = r => ({'رقم الطلب':r.id.slice(-6),'الطبيب':r.doctorName,'الحالة':statusLabel(r.status),'الطالب':r.createdByName,'التاريخ':fmtDateTime(r.createdAt),'القطاع':reqSector(r)});
+  switch(type){
+    case 'total-products': return { title:'إجمالي الأصناف', file:'تقرير-إجمالي-الأصناف', rows: DB.products.map(prodRow) };
+    case 'low-stock': return { title:'أصناف منخفضة الرصيد', file:'تقرير-أصناف-منخفضة', rows: DB.products.filter(p=>p.stock>0&&p.stock<=5).map(prodRow) };
+    case 'zero-stock': return { title:'أصناف نفدت من المخزن', file:'تقرير-أصناف-نافدة', rows: DB.products.filter(p=>p.stock<=0).map(prodRow) };
+    case 'pending-warehouse': return { title:'طلبات بانتظار المخزن', file:'تقرير-طلبات-بانتظار-المخزن', rows: pendingWh.map(reqRow) };
+    case 'my-requests': return { title:'طلباتي', file:'تقرير-طلباتي', rows: myReqs.map(reqRow) };
+    case 'my-delivered': return { title:'طلباتي المُسلَّمة', file:'تقرير-طلباتي-المسلمة', rows: myReqs.filter(r=>r.status==='delivered').map(r=>({'رقم الطلب':r.id.slice(-6),'الطبيب':r.doctorName,'تاريخ التسليم':fmtDateTime(r.deliveredAt||r.createdAt)})) };
+    case 'my-tasks': return { title:'مهام تسليم لديك', file:'تقرير-مهام-التسليم', rows: myTasks.map(reqRow) };
+    case 'my-tasks-delivered': return { title:'مهام تم تسليمها', file:'تقرير-مهام-مُسلَّمة', rows: DB.requests.filter(r=>r.status==='delivered'&&r.assignedTo===u.username).map(r=>({'رقم الطلب':r.id.slice(-6),'الطبيب':r.doctorName,'تاريخ التسليم':fmtDateTime(r.deliveredAt||r.createdAt)})) };
+    default: return { title:'تقرير', file:'تقرير', rows: [] };
+  }
+}
+function openKpiModal(type){
+  const {title, file, rows} = kpiRowsFor(type);
+  kpiModalRows = rows; kpiModalFile = file; kpiModalTitle = title;
+  closeModal();
+  const cols = rows.length ? Object.keys(rows[0]) : [];
+  const bg = document.createElement('div');
+  bg.className='modal-bg center'; bg.id='kpi-modal-bg';
+  bg.innerHTML = `<div class="modal" style="position:relative;">
+    <div class="modal-close" data-a="close-modal">×</div>
+    <h3>${title} (${rows.length})</h3>
+    ${rows.length===0 ? '<div class="empty-state">لا توجد بيانات حالياً 🎉</div>' : `
+    <div class="export-row">
+      <button class="btn-s g" data-a="kpi-export-excel">⬇️ تصدير Excel</button>
+      <button class="btn-s b" data-a="kpi-export-print">🖨️ طباعة / PDF</button>
+    </div>
+    <div class="report-table-wrap">
+      <table class="rep-table"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table>
+    </div>`}
+  </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector('[data-a="close-modal"]').addEventListener('click', closeModal);
+  bg.addEventListener('click', e=>{ if(e.target===bg) closeModal(); });
 }
 let pickerState = { idx:null, search:'' };
 function openProductPicker(idx){
