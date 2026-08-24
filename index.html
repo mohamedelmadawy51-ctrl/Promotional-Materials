@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>IFT | مستلزمات الدعاية والمكتبية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<style>
+*{font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;}
+:root{
+  --blue:#0B3866;--blue2:#134A86;--blue-lg:#E8EFF8;
+  --green:#54A437;--green-d:#3F812A;--green-lg:#EAF4E6;
+  --paper:#F1F5F9;--card:#fff;
+  --ok:#2F7A4D;--ok-bg:#E6F2EA;
+  --bad:#B23A33;--bad-bg:#FBE9E7;
+  --warn:#C9952B;--warn-bg:#FBF1DD;
+  --muted:#64748B;--line:#E2E8F0;
+  --r:14px;--sh:0 2px 8px rgba(11,56,102,.08);--shl:0 8px 24px rgba(11,56,102,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Cairo',sans-serif;background:var(--paper);color:var(--blue);-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;cursor:pointer;border:none;outline:none;}
+input,select,textarea{font-family:inherit;outline:none;}
+#app{max-width:640px;margin:0 auto;height:100vh;height:100dvh;display:flex;flex-direction:column;background:var(--paper);position:relative;overflow:hidden;}
+
+/* WELCOME */
+.welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,var(--blue) 0%,#0a2f55 70%,#061d35 100%);color:#fff;padding:48px 28px;text-align:center;overflow-y:auto;position:relative;}
+.wlogo{width:100px;height:100px;border-radius:24px;background:#fff;padding:8px;margin-bottom:24px;box-shadow:0 16px 40px rgba(0,0,0,.3);object-fit:contain;}
+.welcome h1{font-size:24px;font-weight:900;margin-bottom:6px;}
+.corp{font-size:10px;letter-spacing:3px;color:#8BB4D4;margin-bottom:12px;}
+.welcome p{color:#A8C4DA;font-size:13px;line-height:2;max-width:300px;margin-bottom:28px;}
+.stages{display:flex;gap:5px;margin-bottom:32px;flex-wrap:wrap;justify-content:center;}
+.stages span{font-size:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);padding:4px 10px;border-radius:999px;color:#C5DCF0;}
+.btn-primary{background:var(--green);color:#fff;padding:15px 0;width:100%;max-width:300px;border-radius:13px;font-weight:800;font-size:15px;transition:.15s;box-shadow:0 10px 24px rgba(84,164,55,.35);}
+.btn-primary:active{transform:scale(.97);background:var(--green-d);}
+.sound-toggle{position:absolute;top:16px;left:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;}
+
+/* SIGNIN */
+.signin{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;overflow-y:auto;}
+.slogo{width:70px;height:70px;border-radius:18px;margin-bottom:18px;object-fit:contain;background:#fff;box-shadow:var(--sh);padding:6px;}
+.signin h2{font-size:20px;font-weight:900;margin-bottom:4px;}
+.signin .sub{color:var(--muted);font-size:12px;margin-bottom:24px;}
+.signin form{width:100%;max-width:320px;display:flex;flex-direction:column;gap:14px;}
+.field label{font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px;}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;border-radius:11px;border:1.5px solid var(--line);font-size:14px;background:var(--card);}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue2);}
+.err{background:var(--bad-bg);color:var(--bad);padding:8px 12px;border-radius:9px;margin-bottom:14px;font-size:12px;font-weight:700;}
+.info-note{background:var(--blue-lg);color:var(--blue2);padding:8px 12px;border-radius:9px;margin-bottom:14px;font-size:12px;font-weight:700;}
+.bottom-logo{width:36px;height:36px;object-fit:contain;opacity:.5;margin-top:20px;}
+
+/* SHELL */
+.topbar{display:flex;align-items:center;gap:10px;background:var(--blue);color:#fff;padding:12px 14px;flex-shrink:0;}
+.brand{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+.tlogo{width:30px;height:30px;border-radius:8px;object-fit:contain;background:#fff;padding:2px;flex-shrink:0;}
+.tname{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.trole{font-size:10px;color:#9FC1E0;}
+.logout{background:rgba(255,255,255,.1);border-radius:9px;padding:0 10px;height:34px;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+
+.body-scroll{flex:1;overflow-y:auto;padding:14px 14px 90px;}
+.tabbar{display:flex;background:#fff;border-top:1px solid var(--line);flex-shrink:0;position:relative;z-index:5;}
+.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 2px 8px;background:none;color:var(--muted);font-size:10px;font-weight:700;}
+.tabbar button .ic{font-size:18px;}
+.tabbar button.active{color:var(--blue);}
+
+/* GENERIC CARD/LISTS */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:14px;margin-bottom:12px;}
+.section-title{font-size:13px;font-weight:800;color:var(--blue);margin:18px 0 10px;display:flex;align-items:center;gap:6px;}
+.section-title:first-child{margin-top:0;}
+.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:6px;}
+.kpi{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:14px;text-align:center;}
+.kpi b{display:block;font-size:20px;font-weight:900;color:var(--blue);}
+.kpi span{font-size:11px;color:var(--muted);}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;}
+.pill{display:inline-block;font-size:10px;font-weight:800;padding:3px 10px;border-radius:999px;}
+.pill.pending{background:var(--warn-bg);color:var(--warn);}
+.pill.dist{background:var(--blue-lg);color:var(--blue2);}
+.pill.done{background:var(--ok-bg);color:var(--ok);}
+.pill.rej{background:var(--bad-bg);color:var(--bad);}
+.req-card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:13px;margin-bottom:10px;}
+.req-card .rh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px;}
+.req-card .rh b{font-size:14px;}
+.req-card .meta{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.req-items{font-size:12px;color:var(--blue);background:var(--blue-lg);border-radius:9px;padding:8px 10px;margin-bottom:8px;}
+.req-items div{display:flex;justify-content:space-between;padding:2px 0;}
+.req-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-s{padding:8px 14px;border-radius:9px;font-size:12px;font-weight:800;}
+.btn-s.g{background:var(--green);color:#fff;}
+.btn-s.b{background:var(--blue);color:#fff;}
+.btn-s.o{background:#fff;border:1.5px solid var(--line);color:var(--blue);}
+.btn-s.r{background:var(--bad-bg);color:var(--bad);}
+
+/* STEPPER (order workflow tracker) */
+.tracker{display:flex;align-items:flex-start;margin:6px 0 10px;direction:ltr;}
+.tracker .step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+.tracker .dot{width:22px;height:22px;border-radius:50%;background:#E2E8F0;color:#94A3B8;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;z-index:2;}
+.tracker .step.done .dot{background:var(--ok);color:#fff;}
+.tracker .step.current .dot{background:var(--blue2);color:#fff;box-shadow:0 0 0 4px var(--blue-lg);}
+.tracker .step.rejected .dot{background:var(--bad);color:#fff;}
+.tracker .lbl{font-size:9px;color:var(--muted);margin-top:4px;text-align:center;white-space:nowrap;direction:rtl;}
+.tracker .step.done .lbl,.tracker .step.current .lbl{color:var(--blue);font-weight:700;}
+.tracker .line{position:absolute;top:11px;left:-50%;width:100%;height:2px;background:#E2E8F0;z-index:1;}
+.tracker .line.filled{background:var(--ok);}
+.tracker .line.rej{background:var(--bad);}
+
+/* PRODUCT GRID */
+.search-bar{display:flex;gap:8px;margin-bottom:12px;}
+.search-bar input{flex:1;padding:10px 14px;border-radius:11px;border:1.5px solid var(--line);font-size:13px;background:#fff;}
+.prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.prod-card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+.prod-photo{width:100%;aspect-ratio:1/1;background:var(--blue-lg);display:flex;align-items:center;justify-content:center;color:var(--blue2);font-size:26px;font-weight:900;position:relative;overflow:hidden;}
+.prod-photo img{width:100%;height:100%;object-fit:cover;}
+.prod-photo .up-btn{position:absolute;bottom:4px;left:4px;right:4px;background:rgba(11,56,102,.85);color:#fff;font-size:9px;font-weight:800;padding:4px;border-radius:7px;text-align:center;}
+.prod-info{padding:8px 9px;}
+.prod-info .pn{font-size:11.5px;font-weight:800;line-height:1.3;margin-bottom:4px;height:29px;overflow:hidden;}
+.prod-info .ps{font-size:10px;color:var(--muted);margin-bottom:4px;}
+.prod-info .pq{font-size:12px;font-weight:900;}
+.prod-info .pq.low{color:var(--bad);}
+.prod-info .pq.ok{color:var(--ok);}
+
+/* FORMS */
+.form-box{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:14px;}
+.item-row{display:flex;gap:8px;align-items:center;background:var(--blue-lg);border-radius:10px;padding:8px 10px;margin-bottom:8px;}
+.item-row select{flex:2;}
+.item-row input{flex:1;width:60px;}
+.item-row button{background:var(--bad-bg);color:var(--bad);width:30px;height:30px;border-radius:8px;font-weight:900;flex-shrink:0;}
+.add-item-btn{width:100%;padding:10px;border-radius:10px;border:1.5px dashed var(--blue2);color:var(--blue2);font-weight:800;font-size:12.5px;background:transparent;margin-bottom:14px;}
+.radio-group{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.radio-opt{flex:1;min-width:90px;border:1.5px solid var(--line);border-radius:11px;padding:12px 8px;text-align:center;font-size:12px;font-weight:700;color:var(--muted);}
+.radio-opt.sel{border-color:var(--blue2);background:var(--blue-lg);color:var(--blue2);}
+
+/* USERS/ADMIN */
+.user-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;row-gap:8px;background:#fff;border-radius:12px;box-shadow:var(--sh);padding:11px 13px;margin-bottom:9px;}
+.user-ava{width:38px;height:38px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;}
+.user-body{flex:1;min-width:0;}
+.user-body b{font-size:13px;display:block;}
+.user-body span{font-size:11px;color:var(--muted);}
+.role-badge{font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;background:var(--blue-lg);color:var(--blue2);}
+
+.sector-logo-row{display:flex;align-items:center;gap:12px;background:#fff;border-radius:12px;box-shadow:var(--sh);padding:12px 14px;margin-bottom:9px;}
+.sector-logo-box{width:48px;height:48px;border-radius:10px;background:var(--blue-lg);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;color:var(--blue2);font-weight:900;}
+.sector-logo-box img{width:100%;height:100%;object-fit:contain;}
+
+.modal-bg{position:fixed;inset:0;background:rgba(6,20,38,.55);z-index:80;display:flex;align-items:flex-end;justify-content:center;}
+.modal-bg.center{align-items:center;padding:20px;}
+.modal{background:#fff;width:100%;max-width:640px;border-radius:20px 20px 0 0;max-height:88vh;overflow-y:auto;padding:20px;}
+.modal-bg.center .modal{border-radius:18px;max-height:85vh;}
+.modal h3{font-size:16px;font-weight:900;margin-bottom:14px;}
+.modal-close{position:absolute;top:14px;left:14px;background:var(--blue-lg);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--blue);font-weight:900;}
+
+.toast-msg{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:10px 18px;border-radius:999px;font-size:12.5px;font-weight:700;box-shadow:var(--shl);z-index:200;max-width:90%;text-align:center;}
+
+/* REPORT TABLE (also used for print) */
+.rep-tabs{display:flex;gap:8px;margin-bottom:12px;}
+.report-table-wrap{overflow-x:auto;background:#fff;border-radius:var(--r);box-shadow:var(--sh);}
+table.rep-table{width:100%;border-collapse:collapse;font-size:11.5px;min-width:640px;}
+table.rep-table th{background:var(--blue-lg);color:var(--blue2);padding:8px 8px;text-align:right;white-space:nowrap;font-weight:800;}
+table.rep-table td{padding:7px 8px;border-bottom:1px solid #EFEDE4;white-space:nowrap;}
+.export-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+
+@media print{
+  body *{visibility:hidden;}
+  #print-area, #print-area *{visibility:visible;}
+  #print-area{position:absolute;top:0;right:0;width:100%;padding:20px;}
+}
+
+@media (max-width: 380px){
+  .prod-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+
+const LOGO = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/4QDKRXhpZgAATU0AKgAAAAgACwEOAAIAAAABAAAAAAEQAAIAAAABAAAAAAExAAIAAAABAAAAAAEyAAIAAAAUAAAAkgE7AAIAAAABAAAAAAMgAAIAAAABAAAAAFEQAAEAAAABAQAAAFERAAQAAAABAAAuI1ESAAQAAAABAAAuI4KYAAIAAAABAAAAAIdpAAQAAAABAAAApgAAAAAyMDE4OjA2OjEwIDEyOjA0OjU0AAABkoYABwAAAAgAAAC4AAAAAFVOSUNPREUAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCACoASwDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAor5//b3/AOCnXwc/4JueBU1f4neKI7XUb2Nn0vw9p6i61rWSM/6i2BB2ZXaZpCkKsVDSKWGfw3/bi/4Okvjz+0je3mk/Cm2s/gv4RkLRpPbBNQ8QXcZyuZLmRfLg3DDbYIw8bZAnfrXrZfkuKxmtKOnd6L/g/I4cZmVDDL949e3U/of+LXxy8E/ALw1/bXjvxh4W8FaPu2fbte1WDTbbPp5kzqufxr5I+J//AAcb/sc/C69ntJfi9b69eQf8s9B0TUdTjk/3Z4oDAf8Av5X8v3jbXdf+Lfi648Q+Lde1zxV4gvMefqms38uoXs/pvmmZnb8TVeHw8oH3a+uwvA8Wr1pt+mn53PmcRxdFP93H7z+jHUv+Ds79lmyuTHDY/Fi+TOPNh8OxKp/CS4Vv0re8Ff8AB1B+yJ4nmVdS8Q+OPC6nq+peFLuZV+v2UTn8hX82y6ACPu019AB/hrvlwPhWtHL7/wDgHFHi+rfVI/rd+AX/AAVs/Zo/aduLW28F/Gz4f6hqN8wS30271NdN1Kdj2S0uvLnY/ROK+iK/iOvfC8c6FXjVlPBBGRXuv7I//BTn9oT9g65tY/ht8TPEGn6HalQPD2oS/wBpaIyAglBaT7khDYwWg8uTHRxXkYzgmcVehP5P/Nf5HqYXiulPSrG3of1+UV+Sf/BOn/g6w+Hvxzv9P8K/HvSLT4T+J7lkgTxDbStL4YvJCQMyM5Mthkn/AJamSJVUs868Cv1k0nVrXXtLtr6xube8sbyJZ7e4gkEkU8bAMroy5DKQQQQcEHNfG4zA18LPkrxs/wCtmfTYfE060eek7osUUUVym4UUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAV+YX/Bb3/g4N0f9hGPUvhb8JW0/wATfGiaPy727kAn03wWrAHfMvSa8KnKW+dqZEkvyhYptn/g4N/4LPt/wTw+F8Pw5+HlzFJ8aPHVk0tvc4V08J6exaM37qchp3ZXSBCNu5HkfKxCOX+bm3huNX1G4vr64ub6+vpnuLm5uZWmmuZXYs8kjsSzuzEszMSSSSSSa+w4b4d+tNYiuvc6Lv8A8D8/Q+bzzOlhY+yp/F+X/BNT4i+PvFHx5+JGreMvG2v6t4q8Va9N5+oarqdwZ7m5YAKoLHoqqAqooCIqqqhVUAR2WjbQOKuafpu0DitS3s8Cv1vC4GMIpJH5djMxlOTcnqUbfSwB0q0mnAD/AOtV+O2Ax/nNSpBXpxw6R5E8SzOFh7Ujaf7VfkuLeE7WliQ+hcD+tILm3ZGYTQ7VxuO8YGemar2KJ9rPcy5dNB7VSutJB7VuPeWpH/Hxb/8AfwVXmurXH/Hxb/8AfwVjUw6Z0U6010Zymo6IGB+Wvsb/AIJMf8FvfiR/wS48VWOgX0moeOPgvNMwv/Cs0+ZtKV2LPcaY7nEMgYlzASIZSXB8t389Pla8mtSP+Pi3/wC/grE1NrQg/wCkW/8A38FeHmWU0sRTdOqro+iyzNK9GalC5/ZN+zL+054H/bC+C2i/ED4d6/aeI/C+ux77e5hyrROOHhljbDRTI2VeNwGUjBFd9X8nP/BH3/grJ4j/AOCVf7Qo1JGu9f8AhX4nnji8XeH4JAzOnCi+tQTtW7hXkAkLMgMTFf3ckX9Vnw2+I+h/GD4e6H4r8Mapa614d8SWMOpaZf2zboby3lQPHIp9GVgecHnnBr8ZznJ6mAq8r1i9n+j8z9Uy3MIYunzR0fVG1RRRXjnoBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAV5j+2d+1Z4c/Yg/Zc8bfFXxUzNo/g3Tmuzbo22S/nYiO3tYzggSTzvFCpPyhpASQASPTq/B/8A4O7/ANtObxB8Q/h9+z7o91/oGjQjxl4kCMCJbmTzILGBiOVMcYuZWQ8N9ot26qDXoZXgXi8VGj0e/otzlx2KWHoyqvp+Z+Tfx0+Ovir9rX49eKviX44vRqHirxlfvqF9Iu7yosgLHBEGJKwwxqkUakkrHGgycZqpplhtA4qhotlhV4rorG3wor94y/CxhBRitEfi+ZYyVSbk3qzrPgx8GdZ+Nvje30DQ44TczKZZp7h/Lt7OJSA0sr4O1AWUcAksyqAWYA/aHw5/4JXeFNB8uXxNr2reIJlwTBaoLG2PqDy8jD3DofYV47/wTy1K1s9f1+3bb9sW40nUSn8T2dvdk3JHqIzJBOwHO22Y87a/QY8Gv5m8bvEXiDLM1eVZbWdGkktYpKUm4xlfma5klzcq5bap3bei4MPTjJcz1PkP9vzwB4N+BfwH0rRPDHh3SNHute1NVeaOHfcyW8CF3BmfdKw8xoOrEV6P/wAG/n/BL3wz+3P8T/EvjT4jWMmqeA/ALQ28OlF2jh1rUZQXCSspDNDDGodowV3tNCCWQSRv4N/wU88eR+IvjVpWhQTLLH4b0798oOfKuJ23uv18pYD+PtX6rf8ABqugH7A3jxto3H4j3gJxyQNK0r/E/nX6DwbLHZfwBSxdapJ167c5Sk25e/L3Xd3d3TUdb9bo9fhvCUsVnCp1UnGKbt0uv+C/wP0W+Hvwr8L/AAk0KPS/CnhvQfDOmQqEjtNJ0+KygjUdAEjVVA9gK+Vf+Chskfw8/wCCgH7GfxAv5Gh0ax8Wa34Nmk7fadZ0torRD/vTW6ivr/WtR/sjR7u62eZ9lheXZnbu2qTjPbOK/C79q3/g4x8L/trfs/ax4B8X/s+X0ela4kcsd3Y+PRFe6XcxsskN1byf2f8AJLFIqsDgg4KsCrMp5eHctxmNxDqUYuaScZO6ulOMot+81d2bfyP0rPsxwmDoKFeSi2046OzcWpdE7a2P3aor8KP2cP8Ag6S+JPwv+H1ro3xA+Hui/EvUbGNYYtZh1htDurlVGN1wggnjeQ92jEYP93OSfo79jz/g4r8V/tt/tEaD8M/CfwH8Pafr3iFbl7afVviJNDaJ5FvJcPvaLSZHGUiYDCHkjoORpiuC82w6lOVNOMbty5o2suurT/AzwvF2V13GEKnvSskrO9300TX4n6k0V4n/AMJ5+0d/0Sn4J/8Ah1dU/wDmdr4v/br/AODgvxp/wT6+OzfD3xl8CPC2qa0unQamZtF+I881qI5i4Vd02jxNuHlnI245HJ5x5ODyXF4qp7LDpSlvZSjt/wCBHqYrNMNhoe0rtxjtdqX+R9e/tvf8Exfgv/wUD8CahpPxC8F6TcardQNFaeI7K3jt9c0pyDtkhugu/wCVsN5b7onKgOjjivzX/wCDdj9rHX/2Nv2uPiN+wz8TNUS6k8O6xqT+Crsh1je4gd5Lu1hUklYbiENfxKcbf9J3EtIqhlz/AMHfV3bj/k3O3b/uoR/+Vlfln+2T+3xrnx0/4KK6p+0h4T0SP4f+JZNa0zxBpmni+/tKPT7uxt7WJS0vlReaskltvZTGoIlZDuGSfqMHw7mKo1MNjI2i1eOqdpLa1m7X6ni1s8wMqkKuGmm72dk1dP1S2P69qK4H9lb9obR/2s/2bfA3xM0BWj0nxxotrrEMDSCSS0MsYZ4HK8eZE5aNsdGRhXfV8LKLi3GW6PqYyTV0FFFFSMKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK/j1/4KO/tAv8AtZ/8FEvjJ8QPtC3dprnim7h02ZRgSafasLOyOPU2tvCT7k1/Wl+038Tm+Cf7NvxC8ZIyq/hHw1qWtKSOAba1kmH/AKBX8X3g21EGn26f3UVefYV91wTh+arOq+ll+r/Q+U4qrctCMF1Ot0mDCitu0j4FZmlx4UVsWq4r9iw8bI/IcVPU93/Yt/ZA+I/7UCeM9Y+FP2m68YfDSxt9cj06zfy76+gaVopTbNkBpkyG8o8yp5irufbHJ634C8YftcfGnxOvgXw94D8VTeJ2kFtO/wDwibWVxZsTtLXEkyLBagE4LyCMKT1BxX0Z/wAGoox+098VP+xWtv8A0rFfudX5TxrjMvlmLo5hgqWIcEuRzim43SbWqd431torn2uQ8K0sdgoYj2ko3vdLrZ/gz+R39p34Q6l8AP2hvGXgnWtUj1rWvDOqS2Go36F2W7ulP751Z/nZTIWwzYZhgkAkgfth/wAGrP8AyYH47/7KPef+mrSq/JH/AIKo/wDKST44/wDY5ah/6NNfrd/was/8mB+O/wDso95/6atKr6bjCo58Pwm93yP8Di4Ppxp55UhHZKS/FH6Q+L13eEtUHraSj/xw1/Hdp3/IPg/65r/Kv7EvFn/Iq6n/ANekv/oBr+OnT7qMWEP7yP8A1a/xD0ry/DH4cT/25/7cel4jpv2Fv73/ALaWq+zf+Dfb/lLX8L/+uOsf+mm7r4wSRZBlWVh6g19of8G+3/KWr4X/APXHWP8A003lffZ//wAizEf4J/8ApLPhMj/5GWH/AMcf/Skf0nV/Ox/wc1Ln/gp5cf8AYp6X/wChXFf0T1/O3/wczDP/AAU6uP8AsU9M/wDQrivyHw//AORo/wDC/wA0frPHP/Is/wC3l+p+c+oQ5BrmNet9ytxXW3qZWud1tMqa/WsZC6PzLAVLSP6Bf+DSL9oZ/iN/wT58S/D67uRJefC/xVcRWkIH+p0+/UXcZJ9TdNf/AIKPw/VOv5/v+DPH4jNov7WHxp8Hhv3fiHwrY6wy+psbxoQfw/tE/nX9ANfg/EFH2WPqJdXf7/8Agn7ZlNb2mEhLysFFFFeKekFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAeC/wDBVLd/w7B/aP2Z3/8ACrvE23HXP9k3WK/kJ8Mf6ta/s4/ab+GTfGz9m34heDUVWfxd4a1LRVB6E3NrJCP/AEOv4vvBtyJ9Pt2/vorc+4r9C4Gmv3kfNHxvF0W4Qfqdxpf3K14OlYumPlRWxbNmv1zDvQ/JMUtT9X/+DUj/AJOg+Kv/AGK1t/6Viv3Nr8Mf+DUU5/ae+Kn/AGK1t/6Viv3Or8R46/5HE/SP/pKP2Lgv/kVQ9X+Z/K//AMFUf+Uknxx/7HLUP/Rpr9bv+DVn/kwPx3/2Ue8/9NWlV+SP/BVH/lJJ8cf+xy1D/wBGmv1u/wCDVn/kwPx3/wBlHvP/AE1aVX3HFn/JOU/Sn+R8Zwp/yP6v/b/5n6PeOTjwTrH/AF4z/wDotq8c/Y/+AXgTUv2SfhbcXHgnwjPcT+ENJeSSTR7dmkY2UJJJKZJPrXs3i9BJ4S1RW5VrSUEf8ANfyw6r/wAFNP2gfFnwo0/wjd/FzxpF4btNOi06OxsbwWCG2SIRiFmgVGdNg2lWJDDrnJr4XhvIcRmlKpChNQ5XFtu/VS2t/wAA+24hzqhltSnUrwcuZSSSt3Xc9T/4Lq/FDwh8Sv8Ago94sg8D2+jw6D4Rs7Xw7v0uCOG2nuYAz3JAQAEpNLJET3MJ6gA1c/4N+H2/8FbPhaP70esD6f8AEovD/SvjJFEahVAVVGAAOlfZf/Bv3/ylu+FX+5rH/pova/Xswwiw2SVcPF3UaUld9bRevzPyfA4t4nOqWIatzVIu3b3lof0pV/O5/wAHMv8Ayk8uP+xS0z/0K4r+iOv52/8Ag5mOP+CnVx/2Kemf+hXFflfh9/yNH/gf5o/T+Of+RZ/28v1PzxvOn51z2s/dat29fC1zutvwa/XsZsfluBjeR+j3/Bo7u/4emeMuu3/hVup59M/2to2P61/R1X8/3/Bnj8OW1r9rD41eMAvyeHfCtjo7N6G+u2mA/H+zj+Vf0A1+F8USTzCVuiX5H7ZkUWsFBPz/ADCiiivnT1wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr+PX/AIKO/s/P+yZ/wUS+Mnw/+zraWmh+KbubTYQciPT7pheWQz7WtxCD7g1/YVX4P/8AB3f+xZN4f+Ifw+/aC0e1/wBA1mEeDfEhjUARXMfmT2M7AcsZIzcxM54X7Pbr1YCvqOE8YqON5JbSVvmtV+p4fEGF9thW1vHU/JPSbjKitu1k4rktFvMha6KxuMgV+3YWpdH4zjKNmfrZ/wAGoRz+098Vv+xWtv8A0rFfuhX4Z/8ABp9Zuvx8+MGqN8tnZ+HrC2lkPRXluZWQfiIZP++TX7gDxDZk/wDHxH+dfjHHLvm9S3aP/pKP1jg33cqgn3f5s/lr/wCCqP8Aykk+OP8A2OWof+jTX63f8GrP/Jgfjv8A7KPef+mrSq/IP/gpjr9v4l/4KJfHG8tXWSFvHGrQqwOQxjuniJB7jchx6iv2A/4Nb7ZtC/4J7+LJ7v8AcR6n8Qb64tmbjzUXT9NiJH0eNx9RX3XFunDtNP8AufkfF8KNf2/Vf+P8z9HvFn/Iq6l/16S/+gGv47dO/wCQfB/1zX+Vf17fF74jaT4D+EvirXb68hisdD0e81C5dmwI4oYHkdifQKpP4V/IVZL5dnCp6qig/lXn+GUWo4h+cP8A247fEeSboJf3v0Ja+yv+Dfs/8bb/AIVf7msf+mi9r403V9qf8G9WkTan/wAFYPh7dRrmHSLHV7y5btHGdOuIcn23zIPxr7ziCSWWYi/8k/8A0lnw2QxbzKh/jj+aP6Sa/nZ/4Oamx/wU8uP+xT0v/wBCuK/oc/tyz/5+I/zr+c3/AIOVfFVnr/8AwVJ1yG1mWV9J8OaVZ3IU58uQxNOAf+2c8Z/4EK/IvD+/9pt/3H+aP1njdp5bb+8v1Pz/AL+bANcxrtxtVq2dTusKao+CPhzr3x0+KXhzwR4WtRf+JfGGqW2jaXbs21Zbm4lWKMM38KBmBZjwqgk8A1+pZhXUIuTPzzK8NKc1FdT+gX/g0j/Z5f4cf8E+fEvxBvLYR3nxQ8VXEtpMD/rtPsFFpGCPUXS3/wCDD8f1Trgf2Vv2edH/AGTP2bfA3wz0Bmk0nwPotro8M7RiOS7MUYV53C8eZK4aRsdWdjXfV+A4/E/WMROt3f4dPwP2zC0VSoxprogooorjOgKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK8x/bO/ZT8Oftv/sueNvhV4qVl0fxlpzWhuEXdJYTqRJb3UYyAZIJ0imUH5S0YBBBIPp1FVCcoSUo7oUkmrM/i7+OfwK8VfslfHrxV8NPHFmNP8VeDb99Pvo13eVLgBo54iwBaGaNkljYgFo5EOBnFVNOv8p/e9vWv6K/+Dg3/AIIwN/wUP+F8PxG+HlrFH8aPAtk0VvbfKieLNPUtIbB2OAs6MzvA5O3c7xvhZRJF/NzDNcaPf3FlfQ3Gn31jM9tc29zC8c1rKjFXSSMgOrowIZSAwIIIzxX7Lw7nkMXRTfxLdf10Z+X8QZLKjUvFe69v8j9rv+CVX7ZX7Hv/AAT9/Zvk0fVPi9qOr+OvE06al4kvNP8ACmsLb+YqbYbSEtbKWigDSAO4Bd5ZWwqsqLuftef8HFXw+0Pwbfab8D9H8Va54ouY2itte12EWWnaYSMCdIC7S3Ei9QkixIDtJMgBjP5g/tM/CTTfhbo2qNp/g3WNB03Tte/s3w74gutUE8PjTT9lwftyK3F1u8uCQXFiBbIlxGjgtLC8mz+0v8GND+Gfg7X7mw8P6loNtpGvx6b4X1i5vzPH4901kui2oRBh5cwHlW8gmtMW6Jdxo4LvG7qnkOW18SsViHKcpu+rVum6VtNVp23VjKtmuYUaDw1BRgoq2id+u179nr+p5p4fgj8X+L7WHVtcg0mPUrsC91jUFnuY7be3z3EohSSaTGSxCIzt2BJr9sP2Yv8Agpv+xf8Asf8A7N/hnwD4e+J3inU7XwzZmN5Y/CmpxTajcu7SzzkNEFUyTO7BSxCAquSFFfm/8cf2dvh34K/bG8OeGdMh02bwrdaxqdvPeadd38ujXVrbTOsUZlmY3f2uLYyXaLswfL8pQHDv534Y8H+C/iN8WtZTwvpNxry6f4fjvtN8O2ctzDH4h1UNbxzW1r5ha7a3VZLi4EZb7RKlq6K0bOrJ62aYXC5tSgqzmoJc1lZLsr3T136pJXueRltbE5ZVn7JQlNu13dvvptp+LZ9hf8FPf+C4ul/tJfC3Uvhx8JdJ8S6T4d1xfI1vW9bkWG8v7cNlraCCN3EcUmF3u77nQsmxAWLfnCXr6J+HnwF8I6l8Z/E2l6pH4f0CSw8IWuqnSPFWqXaWOh6tNfafbtY3FxatHKp23L7FldPs7zRx3UgaCeSud+EvwU8D+JvjD46/4SzVtU8C/D/w7fS6TbzeIg8GpWdxc3EkFnHdRwxSN9ot4UubyWIRhJDpskG+IzIw7crhgsvoOjhYtJWb6tt269XstNO2hxZlHG46tGriJJt6Loklf7tnvr31PF2fFfo3/wAEYP2gv2Yf2JPD+teNPiN8TryH4jeKLYaelhp/hzVJ49CsBIJHiaVINkk0skcTsULIqxIAxJevi268Naf4O+BHjm01zwjpMXjbwr4osPDsl619dtcW5mTVHuPkjuPs7tHJYRorCMrtd87yUZeih+CWl3V58IV1Dwjfaa/ivwRf64LWOe5tZPFl/DcalHaQRPcM6g3C2tmQkADSm52wgNNAA84jRxmHlh6spRi3ryuOtlzdb6P/AIfQrKKdbCV1XpqMpJdb6XfL0tr/AEj9Qv2if+Din4F/D7w7cr8OdN8c/EPXmQ/ZftULaPpat6yySMZ8DrtSH5sEbkyGr8Wfjt8bdf8A2gPiv4i8beKr37f4g8TXr319MF2pvbgIi5O2NFCoi5O1EUdq9WuvhB4Osvi5ptn4r0vXvCNrdeC9R1zxBodrKZL/AMMXsQvljVIrgiT/AFcFrdra3DrI6TrGZlDrMPJf2pfh5afBbx/Z6HaX2n6kn9h6Zfve2F59qtL1ri0jnM0L4B8uQOHVXVXQMFdUcMo8jKsDl+XtxwqfNJat6u19r7b9t9N9D1swxGOxqTxDXLF7Lvb7/vPO9Z1HaG5r9hP+DUT/AIJrXHiXxnqH7T/i7T2XTdKFzongNJlYfaLht0N9qK9AVjTzLRDlgWkuwQDGhPw3/wAEhP8AglH4m/4KuftDrp5N9ofwt8Lzxy+LvEMS4ZEOGFjasQVa7mXgE5WFCZWDfu45f6qPht8OND+D/wAPdD8KeGNLtdF8O+G7GHTdMsLZdsNnbxIEjjUeiqoHOTxzk18nxdni5XhKT1e/ku3z/L1PreGcncLYiovT/M2qKKK/OD7UKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAr8wv+C3v/AAb5aP8At3JqPxS+Eq6f4Z+NEMfmXtpIRBpvjRVAGyZukN4FGEuMbXwI5flKyw/p7RXVhMZVw1VVaLs1/VmY16EK0HTqK6Z/FP8AEL4eeJvgF8StX8H+NPDuqeE/FehzeTqOl6lbG3urdiAykqfvKykMrqSrqyspZWBLLDVEU5UKpbqQOtf1t/t7/wDBMX4Of8FJPAqaR8TvC8d1qNlGyaX4h09ha61oxOf9RcgE7MtuMMgeFmClo2KjH4cftxf8Gt3x5/ZuvbzVvhTcWfxo8IxlpEgtimn+ILSMZYiS2kbyp9owu6CQvI2cQJ0r9Myji+hVShXfJLz2+T/zPhM04XqJuVH3l+J+ftvfpj+HnA6VaF8sq7WwynqK53xtoWv/AAk8X3Hh7xboWueFPEFpjz9L1mwm0+9g9N8Myq6591qvD4gUj71fZ0swjJXTPjq2Vzi7SVmdat4oUAAYXoMdKDequP8AZGB7VzK6+Mfepr6+P71b/XUc/wDZ8joZL9UH8I2jA9qo3OoRqG+Vfm+9x1+tYF74nSBCzyKqjqWOBXuv7I//AATG/aE/bxubWT4b/DPxBqGh3RUjxDqEX9m6IqE4Li7n2pMFzkrB5kmOiGuHFZtSpR5qkkl5s9DCZPVqO0ItniV/q6RJt+VVHIAHSvsf/gkt/wAEQPiR/wAFRfFNjr19HqHgX4LRTsb/AMVSwATasqMVe30xHGJpCwKGcgwxEOT5jp5D/pr/AME6f+DU/wCHvwMv9P8AFXx71e1+LHie2ZJ08PW0TReGLOQEHEiuBLf4I/5aiOJlYq8DcGv1k0nSrXQdLtrGxtbezsbOJYLe3gjEcUEagKqIq4CqAAAAMADFfnuc8YcydLCf+Bf5L+vmfdZXwyqbVTEfd/mcT+zL+zH4H/Y8+C2i/D/4d6BaeHPC+hR7Le2hyzSueXmlkbLSzO2WeRyWYnJNd9RRXwMpOT5pas+wSSVkFFFFSAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAct8Wvgb4J+Pvhr+xfHfg/wt410fdv+w69pMGpW2fXy5kZc/hXyR8T/wDg3I/Y5+KN7PdyfCG30G8n/wCWmg63qOmRx/7sEU4gH/fuvuCit6OKrUv4U3H0bRnOjCfxpP5H5j6l/wAGmP7LN7cmSG/+LFimciKHxFEyj8ZLdm/Wt/wV/wAGsH7IvhiZW1Lw9448UKOqal4ru4Vb6m1MB/I1+jNFdUs3xrVnVl95hHA4dO6gvuPnf4Bf8Ek/2af2Yri1ufBfwT+H+n6lYsHt9Su9MXUtSgYd0u7rzJ1P0fmvoiiiuKpVnUfNUbb83c6YwjFWirBRRRWZQUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAH/9k=";
+
+const ROLE_LABEL = { admin:'مدير النظام', requester:'طالب', warehouse:'أمين مخزن', distribution:'مندوب توزيع', accounts:'حسابات' };
+
+const SEED_PRODUCTS = [{"id": 1, "name": "اى بوكس فاكس جرد", "sector": "Bivetra", "unit": "Each", "stock": 247}, {"id": 2, "name": "شنطه جينابل كروس", "sector": "Bivetra", "unit": "Each", "stock": 113}, {"id": 3, "name": "شنطه اى بوكس بدون طباعه", "sector": "Bivetra", "unit": "Each", "stock": 30}, {"id": 4, "name": "حافظه زجاج فاكس جرد", "sector": "Bivetra", "unit": "Each", "stock": 43}, {"id": 5, "name": "شنطه رياضيه بوفيال", "sector": "Bivetra", "unit": "Each", "stock": 14}, {"id": 6, "name": "ايس بوكس افتوفاكسبور", "sector": "Bivetra", "unit": "Each", "stock": 16}, {"id": 7, "name": "زجاجه ميتاكام", "sector": "Bivetra", "unit": "Each", "stock": 145}, {"id": 8, "name": "شنطه لاب توب بورينجر", "sector": "Bivetra", "unit": "Each", "stock": 36}, {"id": 9, "name": "شنطه كروس بورينجر", "sector": "Bivetra", "unit": "Each", "stock": 41}, {"id": 10, "name": "خيمه", "sector": "Bivetra", "unit": "Each", "stock": 1}, {"id": 11, "name": "شكاير بلاستيك ( شنط)", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 12, "name": "اجندة بيفيترا", "sector": "Bivetra", "unit": "Each", "stock": 200}, {"id": 13, "name": "فولدر ورق بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 100}, {"id": 14, "name": "بالطو ابيض ترافيدا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 15, "name": "مريله بورينجر", "sector": "Bivetra", "unit": "Each", "stock": 18}, {"id": 16, "name": "مريله بوفى فاكس", "sector": "Bivetra", "unit": "Each", "stock": 31}, {"id": 17, "name": "سرنجه بايفيترا كروسى", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 18, "name": "شنطه قماش باييترا صغيرة", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 19, "name": "بروشور افتوفاكسبور جديد", "sector": "Bivetra", "unit": "Each", "stock": 250}, {"id": 20, "name": "شماسه يايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 10}, {"id": 21, "name": "فلاير بوفى فاكس", "sector": "Bivetra", "unit": "Each", "stock": 2100}, {"id": 22, "name": "مسدس بارفاك", "sector": "Bivetra", "unit": "Each", "stock": 11}, {"id": 23, "name": "بروشور افتوفاكسبور قديم", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 24, "name": "بروشور بوفيل", "sector": "Bivetra", "unit": "Each", "stock": 350}, {"id": 25, "name": "برشور بوفى فاكس", "sector": "Bivetra", "unit": "Each", "stock": 649}, {"id": 26, "name": "بروشور ليزوباست", "sector": "Bivetra", "unit": "Each", "stock": 450}, {"id": 27, "name": "بلوك نوت ليزوباست", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 28, "name": "بلوك نوت افاتوفاكسبور", "sector": "Bivetra", "unit": "Each", "stock": 770}, {"id": 29, "name": "بلوك نوت ميتا كام جديد", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 30, "name": "بلوك نوت بوفى فاكس", "sector": "Bivetra", "unit": "Each", "stock": 1754}, {"id": 31, "name": "بلوك نوت تايلان", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 32, "name": "بلوك نوت جينابل", "sector": "Bivetra", "unit": "Each", "stock": 400}, {"id": 33, "name": "بلوك نوت بوفيال", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 34, "name": "بلوك نوت ميتاكام قديم", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 35, "name": "بلوك نوت سيبايل", "sector": "Bivetra", "unit": "Each", "stock": 150}, {"id": 36, "name": "بروشور ايفوماك عربى", "sector": "Bivetra", "unit": "Each", "stock": 599}, {"id": 37, "name": "بروشور ايفوماك انجليزى", "sector": "Bivetra", "unit": "Each", "stock": 150}, {"id": 38, "name": "بوستر بوفى فاكس", "sector": "Bivetra", "unit": "Each", "stock": 79}, {"id": 39, "name": "بروشور جينابل", "sector": "Bivetra", "unit": "Each", "stock": 25}, {"id": 40, "name": "بروشور ميتاكام", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 41, "name": "بروشور بايتكول", "sector": "Bivetra", "unit": "Each", "stock": 250}, {"id": 42, "name": "كاب سيباسيل", "sector": "Bivetra", "unit": "Each", "stock": 100}, {"id": 43, "name": "بلوك نوت جلد بايفترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 44, "name": "بروشور كاتوزال", "sector": "Bivetra", "unit": "Each", "stock": 80}, {"id": 45, "name": "بروشور برنامج استقبال", "sector": "Bivetra", "unit": "Each", "stock": 150}, {"id": 46, "name": "ايصال استلام بضاعه", "sector": "Bivetra", "unit": "Each", "stock": 30}, {"id": 47, "name": "حافظه توريد شيكات", "sector": "Bivetra", "unit": "Each", "stock": 20}, {"id": 48, "name": "حافظه تحصيل نقديه", "sector": "Bivetra", "unit": "Each", "stock": 20}, {"id": 49, "name": "طلب توريد بضاعه", "sector": "Bivetra", "unit": "Each", "stock": 28}, {"id": 50, "name": "اشعار خصم ضريبى", "sector": "Bivetra", "unit": "Each", "stock": 25}, {"id": 51, "name": "ايصال استلام نقديه", "sector": "Bivetra", "unit": "Each", "stock": 40}, {"id": 52, "name": "ايصال استلام شيكات", "sector": "Bivetra", "unit": "Each", "stock": 20}, {"id": 53, "name": "اشعار خصم عملاء", "sector": "Bivetra", "unit": "Each", "stock": 15}, {"id": 54, "name": "كشف تسويه عهدة", "sector": "Bivetra", "unit": "Each", "stock": 10}, {"id": 55, "name": "ايصال استلام نقديه اصل", "sector": "Bivetra", "unit": "Each", "stock": 8}, {"id": 56, "name": "ورق صرف بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 1500}, {"id": 57, "name": "طلب صرف بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 10}, {"id": 58, "name": "طلب استيراد بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 18}, {"id": 59, "name": "امر صرف بضاعه", "sector": "Bivetra", "unit": "Each", "stock": 10}, {"id": 60, "name": "مقلامه بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 2}, {"id": 61, "name": "حافظه فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 34}, {"id": 62, "name": "حافظه فورتى فيت بلاستيك", "sector": "Fortivet", "unit": "Each", "stock": 4899}, {"id": 63, "name": "علبه مناديل بلاستيك فورتى", "sector": "Fortivet", "unit": "Each", "stock": 149}, {"id": 64, "name": "شنطه برسين بلس لاب توب", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 65, "name": "علبه مناديل مناشف فورتى", "sector": "Fortivet", "unit": "Each", "stock": 5}, {"id": 66, "name": "كحول", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 67, "name": "ورق معلق قفص فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 14799}, {"id": 68, "name": "ورقأه اكلارك مكتب", "sector": "Fortivet", "unit": "Each", "stock": 64}, {"id": 69, "name": "ساعه حائط اكلارك فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 75}, {"id": 70, "name": "شنطه كرتون فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 250}, {"id": 71, "name": "اجندة فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 102}, {"id": 72, "name": "استند موبيل سلفى", "sector": "Fortivet", "unit": "Each", "stock": 29}, {"id": 73, "name": "ترموموتر فورتى فيت ثلاجه", "sector": "Fortivet", "unit": "Each", "stock": 90}, {"id": 74, "name": "حمام مائى", "sector": "Fortivet", "unit": "Each", "stock": 6}, {"id": 75, "name": "شنطه بلاستيك فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 150}, {"id": 76, "name": "علبه جوانتى فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 77, "name": "مسحه كحليه فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 82}, {"id": 78, "name": "سرنجه 3 سم", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 79, "name": "سرنجه 5 سم", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 80, "name": "فويل", "sector": "Fortivet", "unit": "Each", "stock": 28}, {"id": 81, "name": "دفتر تقرير فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 30}, {"id": 82, "name": "ايصال استلام امبولات", "sector": "Fortivet", "unit": "Each", "stock": 14}, {"id": 83, "name": "بلوك نوت فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 800}, {"id": 84, "name": "ايصال استلام بضاعه فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 40}, {"id": 85, "name": "امر صرف بضاعه فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 50}, {"id": 86, "name": "ورق طباعه فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 3000}, {"id": 87, "name": "ايصال استلام نقديه فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 80}, {"id": 88, "name": "حافظه تحصيل نقديه فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 80}, {"id": 89, "name": "ايصال استلام شيكات فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 40}, {"id": 90, "name": "طلب استيراد فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 101}, {"id": 91, "name": "كشف تسويه عهدة فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 13}, {"id": 92, "name": "طلب صرف فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 28}, {"id": 93, "name": "بروشور لقاحات فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 200}, {"id": 94, "name": "مسطرة اله حاسبه فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 75}, {"id": 95, "name": "معلقه ميزان فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 45}, {"id": 96, "name": "ترمومتر ديجييتال فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 20}, {"id": 97, "name": "شنطه حافظه لقاحات فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 98, "name": "فولدر ورق فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 99, "name": "بلوك نوت صغير نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 100, "name": "بلوك نوت كبير نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 1500}, {"id": 101, "name": "شنطه بلاستيك فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 200}, {"id": 102, "name": "رشاش عادى 20 لتر", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 103, "name": "برواز خشب فاكسيترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 23}, {"id": 104, "name": "فيست فاكستيرند ابيض", "sector": "Vaxi-Trend", "unit": "Each", "stock": 1}, {"id": 105, "name": "شنطه بلاستيك نيو تك", "sector": "Neo-Tec", "unit": "Each", "stock": 100}, {"id": 106, "name": "شنطه افينو  نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 40}, {"id": 107, "name": "برواز خشب نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 34}, {"id": 108, "name": "شفشق نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 280}, {"id": 109, "name": "بروشور  AVINEW نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 100}, {"id": 110, "name": "فولدر ورق نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 400}, {"id": 111, "name": "شنطه بلاستيك رينو", "sector": "Runuo", "unit": "Each", "stock": 40}, {"id": 112, "name": "شنطه لاب توب رينو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 113, "name": "شنطه عدة طبيب", "sector": "Runuo", "unit": "Each", "stock": 11}, {"id": 114, "name": "بروشور بيوتوكسين", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 115, "name": "فولدر ورق رينو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 116, "name": "بلوك نوت صغير زيبريفو", "sector": "Runuo", "unit": "Each", "stock": 400}, {"id": 117, "name": "بلوك نوت صغير  ريسففلور", "sector": "Runuo", "unit": "Each", "stock": 400}, {"id": 118, "name": "بلوك نوت صغير  بانكيور", "sector": "Runuo", "unit": "Each", "stock": 400}, {"id": 119, "name": "بلوك نوت صغير  كوبكيتان", "sector": "Runuo", "unit": "Each", "stock": 400}, {"id": 120, "name": "بوستر زيبريفو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 121, "name": "ايصال استلام بضاعه نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 80}, {"id": 122, "name": "امر صرف بضاعه نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 30}, {"id": 123, "name": "حافظه توريد شيكات نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 124, "name": "حافظه تحصيل نقديه نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 10}, {"id": 125, "name": "ايصال استلام نقديه أصل نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 126, "name": "اشعار خصم عملاء نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 127, "name": "طلب صرف نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 10}, {"id": 128, "name": "كشف تسويه عهدة نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 7}, {"id": 129, "name": "ورق فواتير ضريبه", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 130, "name": "ورق شركه نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 1500}, {"id": 131, "name": "طلب استيراد", "sector": "Neo-Tec", "unit": "Each", "stock": 10}, {"id": 132, "name": "طلب توريد بضاعه فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 133, "name": "امر صرف  بضاعه فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 50}, {"id": 134, "name": "ايصال استلام  بضاعه فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 60}, {"id": 135, "name": "ورق فواتير ضريبه فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 136, "name": "ايصال استلام نقديه فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 100}, {"id": 137, "name": "طلب صرف فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 25}, {"id": 138, "name": "كشف تسويه عهدة فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 20}, {"id": 139, "name": "طلب استيراد عهدة فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 25}, {"id": 140, "name": "حافظه تحصيل نقديه فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 30}, {"id": 141, "name": "حافظه توريد شيكات فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 60}, {"id": 142, "name": "اشعار خصم عملاء فاكستيرند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 25}, {"id": 143, "name": "ورق فواتير ضريبه رينو", "sector": "Runuo", "unit": "Each", "stock": 500}, {"id": 144, "name": "ايصال استلام بضاعه رينو", "sector": "Runuo", "unit": "Each", "stock": 30}, {"id": 145, "name": "حافظه استلام شيكات رينو", "sector": "Runuo", "unit": "Each", "stock": 50}, {"id": 146, "name": "كشف تسويه عهدة رينو", "sector": "Runuo", "unit": "Each", "stock": 15}, {"id": 147, "name": "امر صرف بضاعه رينو", "sector": "Runuo", "unit": "Each", "stock": 20}, {"id": 148, "name": "طلب توريد بضاعه رينو", "sector": "Runuo", "unit": "Each", "stock": 40}, {"id": 149, "name": "ايصال استلام نقديه رينو اصل", "sector": "Runuo", "unit": "Each", "stock": 5}, {"id": 150, "name": "ايصال استلام نقديه رينو", "sector": "Runuo", "unit": "Each", "stock": 40}, {"id": 151, "name": "طلب صرف رينو", "sector": "Runuo", "unit": "Each", "stock": 15}, {"id": 152, "name": "ورق شركه رينو", "sector": "Runuo", "unit": "Each", "stock": 3000}, {"id": 153, "name": "طلب استيراد رينو", "sector": "Runuo", "unit": "Each", "stock": 15}, {"id": 154, "name": "حافظه تحصيل نقديه رينو", "sector": "Runuo", "unit": "Each", "stock": 20}, {"id": 155, "name": "اشعار خصم نقديه رينو", "sector": "Runuo", "unit": "Each", "stock": 25}, {"id": 156, "name": "ورق شركه فيديكا", "sector": "Vetmedica", "unit": "Each", "stock": 500}, {"id": 157, "name": "ايصال استلام نقديه فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 40}, {"id": 158, "name": "حافظه تحصيل نقديه فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 50}, {"id": 159, "name": "حافظه توريد نقديه فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 160, "name": "اصال استلام بضاعه فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 70}, {"id": 161, "name": "طلب صرف فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 10}, {"id": 162, "name": "كشف تسويه عهدة فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 20}, {"id": 163, "name": "طلب استيراد مصروفات فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 100}, {"id": 164, "name": "امر صرف بضاعه", "sector": "Vetmedica", "unit": "Each", "stock": 30}, {"id": 165, "name": "ورق شركه اولميد", "sector": "Allmed", "unit": "Each", "stock": 500}, {"id": 166, "name": "اشعار خصم عملاء اولميد", "sector": "Allmed", "unit": "Each", "stock": 30}, {"id": 167, "name": "ورق فواتير اولميد", "sector": "Allmed", "unit": "Each", "stock": 497}, {"id": 168, "name": "ايصال استلام بضاعه اولميد", "sector": "Allmed", "unit": "Each", "stock": 30}, {"id": 169, "name": "طلب توريد بضاعه اولميد", "sector": "Allmed", "unit": "Each", "stock": 30}, {"id": 170, "name": "امر صرف بضاعه اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 171, "name": "طلب صرف  اولميد", "sector": "Allmed", "unit": "Each", "stock": 8}, {"id": 172, "name": "كشف تسويه عهدة  اولميد", "sector": "Allmed", "unit": "Each", "stock": 30}, {"id": 173, "name": "حافظه توريد شيكات  اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 174, "name": "حافظه تحصيل نقديه  اولميد", "sector": "Allmed", "unit": "Each", "stock": 50}, {"id": 175, "name": "ايصال استلام شيكات اولميد", "sector": "Allmed", "unit": "Each", "stock": 40}, {"id": 176, "name": "ايصال استلام نقديه اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 177, "name": "فولدر بلاستيك فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 178, "name": "برواز مكتب فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 179, "name": "بروازصور فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 180, "name": "شنطه كرتون صغيرة فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 181, "name": "شنطه كرتون كبيرة فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 182, "name": "بلوك نوت  BEST", "sector": "Vetmedica", "unit": "Each", "stock": 1050}, {"id": 183, "name": "بروشور MG  فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 184, "name": "بروشور MS  فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 185, "name": "فولدر ورق فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 800}, {"id": 186, "name": "بروشور فولفاك فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 500}, {"id": 187, "name": "شنط بلاستيك صغيرة فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 188, "name": "شنط بلاستيك كبيرة فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 75}, {"id": 189, "name": "حافظه لقاحات فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 24}, {"id": 190, "name": "بزل قطعتين فيت ميديكا", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 191, "name": "كرسى سيلكون فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 192, "name": "كاب اولميد", "sector": "Allmed", "unit": "Each", "stock": 190}, {"id": 193, "name": "بلوك نوت اولميد", "sector": "Allmed", "unit": "Each", "stock": 330}, {"id": 194, "name": "شنطه ظهر دراكسين اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 195, "name": "شنطه ظهر  اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 196, "name": "افرول اولميد", "sector": "Allmed", "unit": "Each", "stock": 113}, {"id": 197, "name": "حافظه تحصين زرقاء اولميد", "sector": "Allmed", "unit": "Each", "stock": 29}, {"id": 198, "name": "حافظه تحصين سودا اولميد", "sector": "Allmed", "unit": "Each", "stock": 10}, {"id": 199, "name": "شنط بلاستيك صغيرة اولميد", "sector": "Allmed", "unit": "Each", "stock": 125}, {"id": 200, "name": "شنط بلاستيك كبيرةاولميد", "sector": "Allmed", "unit": "Each", "stock": 150}, {"id": 201, "name": "بروشور ديكتوماكس", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 202, "name": "بروشور دراكسين", "sector": "Allmed", "unit": "Each", "stock": 1200}, {"id": 203, "name": "بروشور  LC", "sector": "Allmed", "unit": "Each", "stock": 300}, {"id": 204, "name": "بروشورCOMPIELE", "sector": "Allmed", "unit": "Each", "stock": 25}, {"id": 205, "name": "بروشور اكسيد", "sector": "Allmed", "unit": "Each", "stock": 100}, {"id": 206, "name": "بروشور ONES", "sector": "Allmed", "unit": "Each", "stock": 50}, {"id": 207, "name": "بروشور PS", "sector": "Allmed", "unit": "Each", "stock": 75}, {"id": 208, "name": "بلوك نوت LC", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 209, "name": "بلوك نوت اكسيد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 210, "name": "بلوك نوت دراكسين صغيرة", "sector": "Allmed", "unit": "Each", "stock": 800}, {"id": 211, "name": "بلوك نوت بلاس صغيرة", "sector": "Allmed", "unit": "Each", "stock": 900}, {"id": 212, "name": "بلوك نوت اكسيد صغيرة", "sector": "Allmed", "unit": "Each", "stock": 200}, {"id": 213, "name": "شماسه سيارة اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 214, "name": "بلوك نوت فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 0}, {"id": 215, "name": "عربيه اسعافات بلاستيك", "sector": "Valuvet", "unit": "Each", "stock": 54}, {"id": 216, "name": "حافظه جلد للاوراق فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 32}, {"id": 217, "name": "علبه معطر 4 نوع", "sector": "Valuvet", "unit": "Each", "stock": 45}, {"id": 218, "name": "علبه توابل فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 10}, {"id": 219, "name": "برشور دورنتال دوك 1", "sector": "Valupet", "unit": "Each", "stock": 0}, {"id": 220, "name": "برشور دورنتال دوك 2", "sector": "Valupet", "unit": "Each", "stock": 100}, {"id": 221, "name": "شنطه كرتون هدايه صغيرة", "sector": "Valupet", "unit": "Each", "stock": 0}, {"id": 222, "name": "شنطه كرتون هدايه كبيرة", "sector": "Valupet", "unit": "Each", "stock": 0}, {"id": 223, "name": "برشور سيرو ستو", "sector": "Valupet", "unit": "Each", "stock": 0}, {"id": 224, "name": "برشور ادفاكات", "sector": "Valupet", "unit": "Each", "stock": 0}, {"id": 225, "name": "برشور دورنتال 6", "sector": "Valupet", "unit": "Each", "stock": 0}, {"id": 226, "name": "بلوك نوت ناتوزيم فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 0}, {"id": 227, "name": "بلوك نوت دوج 1", "sector": "Valupet", "unit": "Each", "stock": 0}, {"id": 228, "name": "اشعار خصم عملاء فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 25}, {"id": 229, "name": "ايصال استلام شيكات  فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 20}, {"id": 230, "name": "ايصال استلام نقديه فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 0}, {"id": 232, "name": "حافظه تحصيل نقديه فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 30}, {"id": 233, "name": "ورق فواتير  فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 999}, {"id": 234, "name": "طلب صرف  فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 10}, {"id": 235, "name": "كشف تسويه عهدة فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 40}, {"id": 236, "name": "طلبت توريد بضاعه فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 20}, {"id": 237, "name": "طلب استيراد مصاريف فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 3}, {"id": 238, "name": "امر صرف بضاعه فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 0}, {"id": 239, "name": "ايصال استلام بضاعه فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 20}, {"id": 240, "name": "كشف تسويه عهدة فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 30}, {"id": 241, "name": "ايصال ضريبى فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 20}, {"id": 242, "name": "اشعار خصم عملاء فاليو بيت", "sector": "Valupet", "unit": "Each", "stock": 12}, {"id": 243, "name": "طلب استيراد مصاريف فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 16}, {"id": 244, "name": "طلب صرف فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 23}, {"id": 245, "name": "ورق فواتير شركه فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 2498}, {"id": 246, "name": "طلب توريد بضاعه فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 20}, {"id": 247, "name": "ايصال استلام نقديه فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 20}, {"id": 248, "name": "ورق شركات فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 500}, {"id": 249, "name": "امر صرف بضاعه فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 20}, {"id": 250, "name": "حافظه تحصيل نقديه فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 40}, {"id": 251, "name": "حافظه توريد شيكات فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 30}, {"id": 252, "name": "استند خشب صغير فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 23}, {"id": 253, "name": "استند خشب كبير فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 2}, {"id": 254, "name": "افرول روميكس", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 255, "name": "بلوك نوت كبير روميكس", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 256, "name": "بلوك نوت وسط روميكس", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 257, "name": "بلوك نوت كارلك روميكس", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 258, "name": "اجندة 2024 روميكس", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 259, "name": "ورق فواتير روميكس Ruminants", "sector": "Rawmix", "unit": "Each", "stock": 4000}, {"id": 260, "name": "ايصال استلام شيكات Ruminants", "sector": "Rawmix", "unit": "Each", "stock": 10}, {"id": 261, "name": "ايصال استلام نقديه Ruminants", "sector": "Rawmix", "unit": "Each", "stock": 65}, {"id": 262, "name": "ورق شركه  Ruminants", "sector": "Rawmix", "unit": "Each", "stock": 500}, {"id": 263, "name": "حافظه توريد شيكات  Ruminants", "sector": "Rawmix", "unit": "Each", "stock": 40}, {"id": 264, "name": "ايصال استلام بضاعه Ruminants", "sector": "Rawmix", "unit": "Each", "stock": 20}, {"id": 265, "name": "ايصال استلام نقديه Ruminants", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 266, "name": "ايصال استلام بضاعه Poultry", "sector": "Rawmix", "unit": "Each", "stock": 10}, {"id": 267, "name": "ايصال استلام نقديه Poultry", "sector": "Rawmix", "unit": "Each", "stock": 10}, {"id": 268, "name": "ورق فواتير  Poultry", "sector": "Rawmix", "unit": "Each", "stock": 3000}, {"id": 269, "name": "اشعار خصم عملاء  Poultry", "sector": "Rawmix", "unit": "Each", "stock": 25}, {"id": 270, "name": "ايصال استلام شيكات Poultry", "sector": "Rawmix", "unit": "Each", "stock": 10}, {"id": 271, "name": "طلب توريد بضاعهPoultry", "sector": "Rawmix", "unit": "Each", "stock": 30}, {"id": 272, "name": "امر صرف بضاعه  Ruminants", "sector": "Rawmix", "unit": "Each", "stock": 20}, {"id": 273, "name": "طلب توريد بضاعه Ruminants", "sector": "Rawmix", "unit": "Each", "stock": 50}, {"id": 274, "name": "حافظه توريد شيكاتPoultry", "sector": "Rawmix", "unit": "Each", "stock": 30}, {"id": 275, "name": "حافظه تحصيل نقديه روميكس", "sector": "Rawmix", "unit": "Each", "stock": 20}, {"id": 276, "name": "حافظه تحصيل نقديه Poultry", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 277, "name": "حافظه توريد شيكات روميكس", "sector": "Rawmix", "unit": "Each", "stock": 30}, {"id": 278, "name": "كشف تسويه عهدة روميكس", "sector": "Rawmix", "unit": "Each", "stock": 20}, {"id": 279, "name": "طلب استيراد مصروفات روميكس", "sector": "Rawmix", "unit": "Each", "stock": 20}, {"id": 280, "name": "ورق فواتير روميكس", "sector": "Rawmix", "unit": "Each", "stock": 500}, {"id": 281, "name": "طلب صرف روميكس", "sector": "Rawmix", "unit": "Each", "stock": 26}, {"id": 282, "name": "اشعار خصم روميكس", "sector": "Rawmix", "unit": "Each", "stock": 25}, {"id": 283, "name": "ايصال استلام شيكات روميكس", "sector": "Rawmix", "unit": "Each", "stock": 10}, {"id": 284, "name": "ورق شركه روميكس", "sector": "Rawmix", "unit": "Each", "stock": 1500}, {"id": 285, "name": "امر صرف بضاعه روميكس", "sector": "Rawmix", "unit": "Each", "stock": 40}, {"id": 286, "name": "اشعار خصم عملاء روميكس", "sector": "Rawmix", "unit": "Each", "stock": 25}, {"id": 287, "name": "اجندة 2023 بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 288, "name": "اجندة 2022 بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 289, "name": "بلوك نوت كبيرة بروفارم", "sector": "Profarm", "unit": "Each", "stock": 40}, {"id": 290, "name": "بلوك نوت وسط بروفارم", "sector": "Profarm", "unit": "Each", "stock": 500}, {"id": 291, "name": "فيست عدة بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 292, "name": "بروشور بولترى جارد", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 293, "name": "بروشور انزايفر", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 294, "name": "بروشور فور تيجر افيال", "sector": "Profarm", "unit": "Each", "stock": 291}, {"id": 295, "name": "بروشور فور تيجر MSD", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 296, "name": "بروشورماكس ميل", "sector": "Profarm", "unit": "Each", "stock": 600}, {"id": 297, "name": "استيكر برجابيور", "sector": "Profarm", "unit": "Each", "stock": 4000}, {"id": 298, "name": "شنطه كرتون بروفارم", "sector": "Profarm", "unit": "Each", "stock": 175}, {"id": 299, "name": "طلب توريد بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 300, "name": "ورق الشركه  بروفارم", "sector": "Profarm", "unit": "Each", "stock": 1999}, {"id": 301, "name": "ورق فواتير  بروفارم", "sector": "Profarm", "unit": "Each", "stock": 9500}, {"id": 302, "name": "طلب صرف  بروفارم", "sector": "Profarm", "unit": "Each", "stock": 20}, {"id": 303, "name": "طلب استيراد بروفارم", "sector": "Profarm", "unit": "Each", "stock": 40}, {"id": 304, "name": "حفظ حق بروفارم", "sector": "Profarm", "unit": "Each", "stock": 8}, {"id": 305, "name": "ايصال استلام بضاعه بروفارم", "sector": "Profarm", "unit": "Each", "stock": 90}, {"id": 306, "name": "ايصال استلام نقديه بروفارم", "sector": "Profarm", "unit": "Each", "stock": 30}, {"id": 307, "name": "ايصال استلام شيكات بروفارم", "sector": "Profarm", "unit": "Each", "stock": 30}, {"id": 308, "name": "ايصال استلام نقديه بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 309, "name": "حافظه توريد شيكات بروفارم", "sector": "Profarm", "unit": "Each", "stock": 30}, {"id": 310, "name": "حافظه تحصيل نقديه بروفارم", "sector": "Profarm", "unit": "Each", "stock": 50}, {"id": 311, "name": "شنطه ظهر قطه بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 312, "name": "لانش بوكس أنوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 313, "name": "بشكير انوفال ابيض صغير", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 314, "name": "بشكير انوفال ابيض كبير", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 315, "name": "بالطو ابيض انوفاكس", "sector": "Innoval", "unit": "Each", "stock": 6}, {"id": 316, "name": "افرول انوفاكس", "sector": "Innoval", "unit": "Each", "stock": 88}, {"id": 317, "name": "مسطرة نتروجين", "sector": "Innoval", "unit": "Each", "stock": 49}, {"id": 318, "name": "كونتر صغير", "sector": "Innoval", "unit": "Each", "stock": 5}, {"id": 319, "name": "مسحه كحليه فولف", "sector": "Innoval", "unit": "Each", "stock": 184}, {"id": 320, "name": "مسحه كحليه جاست", "sector": "Innoval", "unit": "Each", "stock": 54}, {"id": 321, "name": "كحول 70 %", "sector": "Innoval", "unit": "Each", "stock": 37}, {"id": 322, "name": "دراع رشاش انوفال", "sector": "Innoval", "unit": "Each", "stock": 8}, {"id": 323, "name": "كتيب الحمايه فى المعمل", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 324, "name": "بلوك نوت انوفاكس", "sector": "Innoval", "unit": "Each", "stock": 540}, {"id": 325, "name": "فولدر ورق انوفال", "sector": "Innoval", "unit": "Each", "stock": 600}, {"id": 326, "name": "معلق نتروجين صغيرة فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 14}, {"id": 327, "name": "معلق نتروجين صغيرة انوفال", "sector": "Innoval", "unit": "Each", "stock": 21}, {"id": 328, "name": "جوانتى اسود ift", "sector": "IFT", "unit": "Each", "stock": 11}, {"id": 329, "name": "شفاته سحب مانويل كبيرة", "sector": "Innoval", "unit": "Each", "stock": 11}, {"id": 330, "name": "شفاته سحب مانويل صغيرة", "sector": "Innoval", "unit": "Each", "stock": 9}, {"id": 331, "name": "سنون استالس 19g", "sector": "Innoval", "unit": "Each", "stock": 130}, {"id": 332, "name": "كيس بلاستيك انوفال كبير", "sector": "Innoval", "unit": "Each", "stock": 50}, {"id": 333, "name": "كيس بلاستيك انوفال صغير", "sector": "Innoval", "unit": "Each", "stock": 25}, {"id": 334, "name": "رشاشه عاديه 20 لتر يدوى", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 335, "name": "رشاشه ماتابى انوفال", "sector": "Innoval", "unit": "Each", "stock": 3}, {"id": 336, "name": "قطاعه استالس", "sector": "Innoval", "unit": "Each", "stock": 10}, {"id": 337, "name": "جهاز تبخير انوفال", "sector": "Innoval", "unit": "Each", "stock": 3}, {"id": 338, "name": "رشاش بلاستيك 2 لتر", "sector": "Innoval", "unit": "Each", "stock": 49}, {"id": 339, "name": "استند اكلارك", "sector": "Innoval", "unit": "Each", "stock": 160}, {"id": 340, "name": "صبانه يدوى", "sector": "Vetmedica", "unit": "Each", "stock": 127}, {"id": 341, "name": "بلوك نوت  H9N2", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 342, "name": "بلوك نوت سلك صفير", "sector": "Innoval", "unit": "Each", "stock": 850}, {"id": 343, "name": "افابوست بلوك نوت مكتوب فيت ميديكا", "sector": "Innoval", "unit": "Each", "stock": 500}, {"id": 344, "name": "وردة معطرة بلاستيك", "sector": "Innoval", "unit": "Each", "stock": 480}, {"id": 345, "name": "بلوك نوت فيركون اس", "sector": "Innoval", "unit": "Each", "stock": 540}, {"id": 346, "name": "ورق ليبول تفقيص", "sector": "Innoval", "unit": "Each", "stock": 8000}, {"id": 347, "name": "بوستر اكلارك مطهرات", "sector": "Innoval", "unit": "Each", "stock": 5}, {"id": 348, "name": "حمام مائى 1 عين", "sector": "Innoval", "unit": "Each", "stock": 11}, {"id": 349, "name": "حمام مائى 2 عين", "sector": "Innoval", "unit": "Each", "stock": 3}, {"id": 350, "name": "حمام مائى 4 عين", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 351, "name": "فايل بلاستيك", "sector": "Innoval", "unit": "Each", "stock": 9000}, {"id": 352, "name": "افارول استخدام مرة واحدة", "sector": "Innoval", "unit": "Each", "stock": 215}, {"id": 353, "name": "اى بوكس انوفال", "sector": "Innoval", "unit": "Each", "stock": 1490}, {"id": 354, "name": "استند مضىء انوفال", "sector": "Innoval", "unit": "Each", "stock": 60}, {"id": 355, "name": "اشغار خصم انوفال", "sector": "Innoval", "unit": "Each", "stock": 20}, {"id": 356, "name": "ايصال استلام انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 357, "name": "كشف تسويه انوغال", "sector": "Innoval", "unit": "Each", "stock": 30}, {"id": 358, "name": "طلب صرف انوفال", "sector": "Innoval", "unit": "Each", "stock": 10}, {"id": 359, "name": "ايصال استلام نقديه انوفال", "sector": "Innoval", "unit": "Each", "stock": 40}, {"id": 360, "name": "ورق فواتير انوفال", "sector": "Innoval", "unit": "Each", "stock": 4}, {"id": 361, "name": "حافظه تحصيل نقديه انوفال", "sector": "Innoval", "unit": "Each", "stock": 80}, {"id": 362, "name": "حافظه توريد شيكات انوفال", "sector": "Innoval", "unit": "Each", "stock": 49}, {"id": 363, "name": "طلب توريد بضاعه انوفال", "sector": "Innoval", "unit": "Each", "stock": 20}, {"id": 364, "name": "ورق شركه انوفال", "sector": "Innoval", "unit": "Each", "stock": 500}, {"id": 365, "name": "ايصال استلام نقديه", "sector": "Innoval", "unit": "Each", "stock": 10}, {"id": 366, "name": "ايصال استلام نقديه برو بيت", "sector": "ProPet", "unit": "Each", "stock": 20}, {"id": 367, "name": "ايصال استلام شيكات برو بيت", "sector": "ProPet", "unit": "Each", "stock": 20}, {"id": 368, "name": "اشعار خصم عملاء بروبيت", "sector": "ProPet", "unit": "Each", "stock": 16}, {"id": 369, "name": "حافظه تحصيل نقديه بروبيت", "sector": "ProPet", "unit": "Each", "stock": 20}, {"id": 370, "name": "حافظه توريد شيكات بروبيت", "sector": "ProPet", "unit": "Each", "stock": 10}, {"id": 371, "name": "ورق شركه بروبيت", "sector": "ProPet", "unit": "Each", "stock": 500}, {"id": 372, "name": "فواتير بروبيت", "sector": "ProPet", "unit": "Each", "stock": 4999}, {"id": 373, "name": "كشف تسويه عهدة بروبيت", "sector": "ProPet", "unit": "Each", "stock": 20}, {"id": 374, "name": "طلب صرف بروبيت", "sector": "ProPet", "unit": "Each", "stock": 8}, {"id": 375, "name": "امر صرف بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 376, "name": "ايصال استلام بضاعه بروبيت", "sector": "ProPet", "unit": "Each", "stock": 80}, {"id": 377, "name": "طلب توريد بضاعه بروبيت", "sector": "ProPet", "unit": "Each", "stock": 30}, {"id": 378, "name": "طلب استرداد مصروفات بروبيت", "sector": "ProPet", "unit": "Each", "stock": 8}, {"id": 379, "name": "بروشور فورنت لين", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 380, "name": "بلوك نوت  صغير frontline بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 381, "name": "بلوك نوت ملونين بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 382, "name": "فلاير frontline ققط  بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 383, "name": "فلاير frontline كلاب  بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 384, "name": "بلوك نوت بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 385, "name": "شنطه يد صغيرة", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 386, "name": "شنطه قماش بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 387, "name": "بلوك نوت بربيت 3", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 388, "name": "اجندة بيضاء بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 389, "name": "اجندة 2", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 390, "name": "بوستر كبير بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 391, "name": "شنطه ظهر بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 392, "name": "ميدليه اكلاريك صغيرة", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 393, "name": "امبول هولدر", "sector": "السويدى", "unit": "Each", "stock": 0}, {"id": 394, "name": "ليبل اقفاص الكتاكيت", "sector": "السويدى", "unit": "Each", "stock": 0}, {"id": 395, "name": "بالطو طويل شامل الطباعه", "sector": "السويدى", "unit": "Each", "stock": 0}, {"id": 396, "name": "دفتر تحصين اصل x   2 صورة", "sector": "السويدى", "unit": "Each", "stock": 0}, {"id": 397, "name": "مسطرة قياس نيتروجين اكريلك", "sector": "السويدى", "unit": "Each", "stock": 0}, {"id": 398, "name": "افرول استخدام مرة واحدة", "sector": "السويدى", "unit": "Each", "stock": 0}, {"id": 399, "name": "بدله كامله كتان نص كم", "sector": "السويدى", "unit": "Each", "stock": 0}, {"id": 400, "name": "بوستر اكريلك", "sector": "السويدى", "unit": "Each", "stock": 0}, {"id": 401, "name": "ورق تصوير A4", "sector": "IFT", "unit": "Each", "stock": 20}, {"id": 402, "name": "استند بوكس كرتون  بروبيت", "sector": "ProPet", "unit": "Each", "stock": 150}, {"id": 403, "name": "استند اكلارك بروبيت", "sector": "ProPet", "unit": "Each", "stock": 13}, {"id": 404, "name": "مقلمه خشب بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 405, "name": "استند اكريلك جاليمون", "sector": "Neo-Tec", "unit": "Each", "stock": 1}, {"id": 406, "name": "ورقاه خشب فولفاك بست", "sector": "Vetmedica", "unit": "Each", "stock": 6}, {"id": 407, "name": "اكلاسير ابيض 4 سم", "sector": "Fortivet", "unit": "Each", "stock": 24}, {"id": 408, "name": "فايل بوكس بلاستيك", "sector": "IFT", "unit": "Each", "stock": 7}, {"id": 409, "name": "مقلامه بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 410, "name": "امبول هولدر انوفال", "sector": "Innoval", "unit": "Each", "stock": 70}, {"id": 411, "name": "اجندة فولفاك فولفند", "sector": "Fortivet", "unit": "Each", "stock": 32}, {"id": 412, "name": "حافظه حرف L", "sector": "IFT", "unit": "Each", "stock": 50}, {"id": 413, "name": "فواصل 12", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 414, "name": "ترى مكتب IFT", "sector": "IFT", "unit": "Each", "stock": 28}, {"id": 415, "name": "اى بوكس IFT", "sector": "IFT", "unit": "Each", "stock": 4}, {"id": 416, "name": "بكر سولوتيب عريض", "sector": "IFT", "unit": "Each", "stock": 375}, {"id": 417, "name": "صبانه ورق", "sector": "IFT", "unit": "Each", "stock": 210}, {"id": 418, "name": "بلوك نوت", "sector": "IFT", "unit": "Each", "stock": 329}, {"id": 419, "name": "اظرف IFT كبيرة", "sector": "IFT", "unit": "Each", "stock": 1247}, {"id": 420, "name": "بوكس فايل كرتون", "sector": "IFT", "unit": "Each", "stock": 25}, {"id": 421, "name": "فولدر 100 جيب", "sector": "IFT", "unit": "Each", "stock": 52}, {"id": 422, "name": "اكلاسير 4 سم اسود", "sector": "IFT", "unit": "Each", "stock": 50}, {"id": 423, "name": "اكلاسير 8سم اسود", "sector": "IFT", "unit": "Each", "stock": 150}, {"id": 424, "name": "اكلاسير 4 سم  ازرق", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 425, "name": "اكلاسير 8سم ازرق", "sector": "IFT", "unit": "Each", "stock": 299}, {"id": 426, "name": "سرنجه حقن كبيرة", "sector": "Fortivet", "unit": "Each", "stock": 6}, {"id": 427, "name": "سرنجه 18 G", "sector": "Fortivet", "unit": "Each", "stock": 4000}, {"id": 428, "name": "سرنجه 20 سم", "sector": "Fortivet", "unit": "Each", "stock": 200}, {"id": 429, "name": "ساعات حائط بايفترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 430, "name": "شنطه كرتون بيتال", "sector": "Petal", "unit": "Each", "stock": 150}, {"id": 431, "name": "برشور زويتس", "sector": "Petal", "unit": "Each", "stock": 150}, {"id": 432, "name": "بلوك نوت بيتال", "sector": "Petal", "unit": "Each", "stock": 50}, {"id": 433, "name": "بلوك نوت بيتال 2", "sector": "Petal", "unit": "Each", "stock": 50}, {"id": 434, "name": "برشور بيتال", "sector": "Petal", "unit": "Each", "stock": 0}, {"id": 435, "name": "فولدر ورق", "sector": "Petal", "unit": "Each", "stock": 100}, {"id": 436, "name": "دنجلر بيتال", "sector": "Petal", "unit": "Each", "stock": 300}, {"id": 437, "name": "شنطه بلاستيك كبيرة", "sector": "Petal", "unit": "Each", "stock": 100}, {"id": 438, "name": "شنطه كرتون IFT", "sector": "IFT", "unit": "Each", "stock": 350}, {"id": 439, "name": "شنطه بلاستيك IFT", "sector": "IFT", "unit": "Each", "stock": 25}, {"id": 440, "name": "استند بيت خشب", "sector": "IFT", "unit": "Each", "stock": 63}, {"id": 441, "name": "فايل بلاستيك بالمسطرة", "sector": "IFT", "unit": "Each", "stock": 101}, {"id": 442, "name": "اساتك كيس", "sector": "IFT", "unit": "Each", "stock": 355}, {"id": 443, "name": "مشبك", "sector": "IFT", "unit": "Each", "stock": 343}, {"id": 444, "name": "حافظه حرف U", "sector": "IFT", "unit": "Each", "stock": 7098}, {"id": 445, "name": "طلب توريد بضاعه بيتال", "sector": "Petal", "unit": "Each", "stock": 40}, {"id": 446, "name": "اشعار خصم ضريبى بيتال", "sector": "Petal", "unit": "Each", "stock": 25}, {"id": 447, "name": "ايصال استلام بيتال", "sector": "Petal", "unit": "Each", "stock": 20}, {"id": 448, "name": "ورق شركه بيتال", "sector": "Petal", "unit": "Each", "stock": 3500}, {"id": 449, "name": "كشف تسويه عهدة بيتال", "sector": "Petal", "unit": "Each", "stock": 35}, {"id": 450, "name": "طلب استيراد مصروفات بيتال", "sector": "Petal", "unit": "Each", "stock": 115}, {"id": 451, "name": "ورق فواتير ضربيه بيتال", "sector": "Petal", "unit": "Each", "stock": 1006}, {"id": 452, "name": "طلب صرف IFT", "sector": "IFT", "unit": "Each", "stock": 30}, {"id": 453, "name": "حافظه شيكات مرتد IFT", "sector": "IFT", "unit": "Each", "stock": 30}, {"id": 454, "name": "كشف تسويه عهدة IFT", "sector": "IFT", "unit": "Each", "stock": 30}, {"id": 455, "name": "ايصال استلام عهدة IFT", "sector": "IFT", "unit": "Each", "stock": 15}, {"id": 456, "name": "طلب استيراد IFT", "sector": "IFT", "unit": "Each", "stock": 80}, {"id": 457, "name": "اشعار خصم ضريبى IFT", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 458, "name": "اخطار صيانه IFT", "sector": "IFT", "unit": "Each", "stock": 20}, {"id": 459, "name": "اذن صرف مخازن IFT", "sector": "IFT", "unit": "Each", "stock": 20}, {"id": 460, "name": "تقرير خط السير IFT", "sector": "IFT", "unit": "Each", "stock": 40}, {"id": 461, "name": "شفشق IFT", "sector": "Innoval", "unit": "Each", "stock": 100}, {"id": 462, "name": "شنطه كروس فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 463, "name": "شنطه ظهر روميكس", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 464, "name": "جوانتى روميكس", "sector": "Rawmix", "unit": "Each", "stock": 24}, {"id": 465, "name": "جوانتى بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 466, "name": "شنطه يد بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 467, "name": "شنطه كروس روميكس", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 468, "name": "شنطه قماش نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 115}, {"id": 469, "name": "شنطه ظهر فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 23}, {"id": 470, "name": "شنطه كروس نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 471, "name": "شنطه كروس بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 472, "name": "شنطه ظهر بروفارم", "sector": "Profarm", "unit": "Each", "stock": 52}, {"id": 473, "name": "شنطه كروس فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 60}, {"id": 474, "name": "كشاف 390 بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 475, "name": "درام 6515 اصفر", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 476, "name": "درام 6515 احمر", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 477, "name": "درام 6515 ازرق", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 478, "name": "درام 6515 اسود", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 479, "name": "حبر 3615", "sector": "IT", "unit": "Each", "stock": 4}, {"id": 480, "name": "حبر 3655", "sector": "IT", "unit": "Each", "stock": 5}, {"id": 481, "name": "درام 3615", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 482, "name": "درام 7225 اسود", "sector": "IT", "unit": "Each", "stock": 0}, {"id": 483, "name": "درام 7225 احمر", "sector": "IT", "unit": "Each", "stock": 6}, {"id": 484, "name": "درام 7225 اصفر", "sector": "IT", "unit": "Each", "stock": 4}, {"id": 485, "name": "درام 7225 ازرق", "sector": "IT", "unit": "Each", "stock": 5}, {"id": 486, "name": "حبر C405", "sector": "IT", "unit": "Each", "stock": 5}, {"id": 487, "name": "درام GG00", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 488, "name": "حبر GG00", "sector": "IT", "unit": "Each", "stock": 8}, {"id": 489, "name": "وست C405", "sector": "IT", "unit": "Each", "stock": 3}, {"id": 490, "name": "حبر 8045", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 491, "name": "درام 8045", "sector": "IT", "unit": "Each", "stock": 5}, {"id": 492, "name": "وست C7025", "sector": "IT", "unit": "Each", "stock": 6}, {"id": 493, "name": "درام C7025", "sector": "IT", "unit": "Each", "stock": 3}, {"id": 494, "name": "حبر C7025 اصفر", "sector": "IT", "unit": "Each", "stock": 5}, {"id": 495, "name": "حبر C7025 احمر", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 496, "name": "حبر C7025 ازرق", "sector": "IT", "unit": "Each", "stock": 5}, {"id": 497, "name": "حبر 7855 اسود", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 498, "name": "حبر 7855 احمر", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 499, "name": "حبر 7855 ازرق", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 500, "name": "حبر 7855 اصفر", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 501, "name": "درام 7855", "sector": "IT", "unit": "Each", "stock": 6}, {"id": 502, "name": "حبر 7225 اسود", "sector": "IT", "unit": "Each", "stock": 0}, {"id": 503, "name": "حبر 7225 احمر", "sector": "IT", "unit": "Each", "stock": 4}, {"id": 504, "name": "حبر 7225 اصفر", "sector": "IT", "unit": "Each", "stock": 5}, {"id": 505, "name": "حبر 7225 ازرق", "sector": "IT", "unit": "Each", "stock": 4}, {"id": 506, "name": "وست 7225", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 507, "name": "درام 7225اصفر", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 508, "name": "درام 7225 اسود", "sector": "IT", "unit": "Each", "stock": 0}, {"id": 509, "name": "درام 8145 C", "sector": "IT", "unit": "Each", "stock": 7}, {"id": 510, "name": "حبر 5330", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 511, "name": "حبر 5230", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 512, "name": "درام 5330", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 513, "name": "درام 5021", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 514, "name": "حبر 5020", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 515, "name": "درام 5020", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 516, "name": "درام0505 G", "sector": "IT", "unit": "Each", "stock": 3}, {"id": 517, "name": "وست 8145 C", "sector": "IT", "unit": "Each", "stock": 7}, {"id": 518, "name": "حبر 8145 C ازرق", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 519, "name": "حبر 8145 C احمر", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 520, "name": "حبر 8145 C اصفر", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 521, "name": "حبر 8145 C اسود", "sector": "IT", "unit": "Each", "stock": 5}, {"id": 522, "name": "درام بانسونك 412E", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 523, "name": "حبر بانسونك 412E", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 524, "name": "حبر  A35 HP", "sector": "IT", "unit": "Each", "stock": 2}, {"id": 525, "name": "حبر  A49 HP", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 526, "name": "حبر  A24 HP", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 527, "name": "حبر  A92 HP", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 528, "name": "حبر  A103 HP", "sector": "IT", "unit": "Each", "stock": 5}, {"id": 529, "name": "وصله سيارة MPS", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 530, "name": "وصله موبيل", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 531, "name": "ماج كبير بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 532, "name": "طقم مكتب بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 533, "name": "قلم بلاستيك بروفارم", "sector": "Profarm", "unit": "Each", "stock": 850}, {"id": 534, "name": "طقم عدة بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 535, "name": "مج صغير بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 536, "name": "ماج كبير حرارى", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 537, "name": "وصله ثلاثيه بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 538, "name": "كمامات بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 539, "name": "باور بنك", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 540, "name": "مشترك", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 541, "name": "منبه + اسبيكر", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 542, "name": "مفك كهرباء", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 543, "name": "مشترك USB", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 544, "name": "جهاز", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 545, "name": "شنطه كروس بروفارم", "sector": "Profarm", "unit": "Each", "stock": 80}, {"id": 546, "name": "مفك كهرباء روميكس", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 547, "name": "مفك يدوى", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 548, "name": "مشترك USB", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 549, "name": "وصله موبيل", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 550, "name": "كشاف", "sector": "Rawmix", "unit": "Each", "stock": 120}, {"id": 551, "name": "مشترك", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 552, "name": "فواحه مكتب", "sector": "Valuvet", "unit": "Each", "stock": 0}, {"id": 553, "name": "فرشه قطط", "sector": "Valuvet", "unit": "Each", "stock": 0}, {"id": 554, "name": "ابجورة", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 555, "name": "كشاف فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 556, "name": "قلم بلاستيك فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 557, "name": "كاب", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 558, "name": "اجندة جلد", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 559, "name": "قلم معدن", "sector": "Neo-Tec", "unit": "Each", "stock": 770}, {"id": 560, "name": "قلم بلاستيك نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 561, "name": "ماج نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 562, "name": "كشاف كبير", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 563, "name": "كشاف صغير", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 564, "name": "قلم معدن رينو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 565, "name": "قلم بلاستيك رونيو", "sector": "Runuo", "unit": "Each", "stock": 1950}, {"id": 566, "name": "شنطه كروس رينو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 567, "name": "كرسى مساج", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 568, "name": "شنطه كروس يوفاكسين", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 569, "name": "شنطه ظهر بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 570, "name": "اجندة جلد بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 571, "name": "قلم بلاستيك ايلانكوبان", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 572, "name": "حزام رجالى", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 573, "name": "اقلام ايبوفاكسن", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 574, "name": "قلم معدن بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 575, "name": "اجندة جلد بايفيترا2", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 576, "name": "ميزان بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 577, "name": "قلم بلاستيك بورينجر", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 578, "name": "شنطه كروس بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 579, "name": "وصله ثلاثيه بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 580, "name": "اقلام بلاستيك روميكس", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 581, "name": "قلم معدن بورينجر", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 582, "name": "اجندة جلد بورينجر", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 583, "name": "محفظه ميتاكام", "sector": "Bivetra", "unit": "Each", "stock": 24}, {"id": 584, "name": "محفظه بورينجر", "sector": "Bivetra", "unit": "Each", "stock": 39}, {"id": 585, "name": "جهاز مساج MG55", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 586, "name": "جهاز مساج MG80", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 587, "name": "ماج حرارى ديجيتال فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 588, "name": "دفايه فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 589, "name": "ترمس  فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 590, "name": "ماج حرارى  فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 591, "name": "مضرب فواكه فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 592, "name": "وصله ثلاثيه فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 593, "name": "شاحن سيارة فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 594, "name": "فواحه  فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 595, "name": "كشاف مكتب  فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 596, "name": "جهاز انذار فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 47}, {"id": 597, "name": "ماج حرارى اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 598, "name": "حامل موبيل سيارة", "sector": "Fortivet", "unit": "Each", "stock": 2}, {"id": 599, "name": "شنطه كروس فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 62}, {"id": 600, "name": "بشكير زويتس فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 30}, {"id": 601, "name": "قلم دوكو فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 131}, {"id": 602, "name": "قلم ماركرر فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 603, "name": "استوب وتش فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 5}, {"id": 604, "name": "ترمومتر فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 15}, {"id": 605, "name": "قلم بلاستيك فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 500}, {"id": 606, "name": "شنط ظهر فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 44}, {"id": 607, "name": "شاشه سامسونج 43", "sector": "Petal", "unit": "Each", "stock": 1}, {"id": 608, "name": "قلم بلاستيك بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 609, "name": "قلم بلاستيك روميكس", "sector": "Rawmix", "unit": "Each", "stock": 0}, {"id": 610, "name": "قلم معدن اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 611, "name": "شنطه ظهر اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 612, "name": "شنطه كروس انوفال", "sector": "Innoval", "unit": "Each", "stock": 60}, {"id": 613, "name": "كاب انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 614, "name": "ستوب وتش انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 615, "name": "صبغه انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 616, "name": "سماعه بلوتوث راس انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 617, "name": "قلم مركرر انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 618, "name": "قلم دكو انوفال", "sector": "Innoval", "unit": "Each", "stock": 150}, {"id": 619, "name": "ترمومتر ديجيتال انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 620, "name": "ترمومتر عادى انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 621, "name": "كشاف راس انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 622, "name": "ميزان عادى انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 623, "name": "مج حرارى اكسيد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 624, "name": "مقص تشريح بروفام", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 625, "name": "طقم مكتب بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 626, "name": "اله حاسبه IFT", "sector": "IFT", "unit": "Each", "stock": 10}, {"id": 627, "name": "قلم كروكوتر IFT", "sector": "IFT", "unit": "Each", "stock": 84}, {"id": 628, "name": "قلم جاف برافو IFT", "sector": "IFT", "unit": "Each", "stock": 1198}, {"id": 629, "name": "دوسيه بلاستيك عادى IFT", "sector": "IFT", "unit": "Each", "stock": 356}, {"id": 630, "name": "قلم رصاص كلاسيك IFT", "sector": "IFT", "unit": "Each", "stock": 65}, {"id": 631, "name": "طقم فسفورىIFT", "sector": "IFT", "unit": "Each", "stock": 54}, {"id": 632, "name": "علبه دبابيسIFT", "sector": "IFT", "unit": "Each", "stock": 335}, {"id": 633, "name": "علبه كلابسات صغيرةIFT", "sector": "IFT", "unit": "Each", "stock": 100}, {"id": 634, "name": "علبه كلابسات وسط IFT", "sector": "IFT", "unit": "Each", "stock": 98}, {"id": 635, "name": "قلم فسفورى اصفر IFT", "sector": "IFT", "unit": "Each", "stock": 152}, {"id": 636, "name": "قلم ماركر IFT", "sector": "IFT", "unit": "Each", "stock": 109}, {"id": 637, "name": "قلم سبورة IFT", "sector": "IFT", "unit": "Each", "stock": 1}, {"id": 638, "name": "قطاعه سولتيب IFT", "sector": "IFT", "unit": "Each", "stock": 20}, {"id": 639, "name": "خرامه صغيرة  IFT", "sector": "IFT", "unit": "Each", "stock": 5}, {"id": 640, "name": "وراقه مكتب بلاستيك IFT", "sector": "IFT", "unit": "Each", "stock": 17}, {"id": 641, "name": "صمغ صغيرIFT", "sector": "IFT", "unit": "Each", "stock": 25}, {"id": 642, "name": "حافظه ورقIFT", "sector": "IFT", "unit": "Each", "stock": 5}, {"id": 643, "name": "بشورة صبورة IFT", "sector": "IFT", "unit": "Each", "stock": 10}, {"id": 644, "name": "قطر بلاستيك احمرIFT", "sector": "IFT", "unit": "Each", "stock": 7}, {"id": 645, "name": "بكر سولتيب صغيرةIFT", "sector": "IFT", "unit": "Each", "stock": 218}, {"id": 646, "name": "حامله ورق استندIFT", "sector": "IFT", "unit": "Each", "stock": 15}, {"id": 647, "name": "فواصل دوسيه 30 فاصلIFT", "sector": "IFT", "unit": "Each", "stock": 50}, {"id": 648, "name": "فواصل دوسيه 12 فاصلIFT", "sector": "IFT", "unit": "Each", "stock": 40}, {"id": 649, "name": "C.D 50 علبه", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 650, "name": "استيكه IFT", "sector": "IFT", "unit": "Each", "stock": 118}, {"id": 651, "name": "قلم C.D IFT", "sector": "IFT", "unit": "Each", "stock": 70}, {"id": 652, "name": "قلم أحمر IFT", "sector": "IFT", "unit": "Each", "stock": 63}, {"id": 653, "name": "قلم أاسود IFT", "sector": "IFT", "unit": "Each", "stock": 30}, {"id": 654, "name": "خلاعه دبابيس IFT", "sector": "IFT", "unit": "Each", "stock": 10}, {"id": 655, "name": "قلم اخضر IFT", "sector": "IFT", "unit": "Each", "stock": 58}, {"id": 656, "name": "استيك نوت  IFT", "sector": "IFT", "unit": "Each", "stock": 139}, {"id": 657, "name": "حجر بطاريه  AA  IFT", "sector": "IFT", "unit": "Each", "stock": 380}, {"id": 658, "name": "حجر بطاريه  AAA  IFT", "sector": "IFT", "unit": "Each", "stock": 305}, {"id": 659, "name": "بلوك نوت كبير IFT", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 660, "name": "بلوك نوت صغير IFT", "sector": "IFT", "unit": "Each", "stock": 10}, {"id": 661, "name": "مسطرة بلاستيك IFT", "sector": "IFT", "unit": "Each", "stock": 6}, {"id": 662, "name": "مسطرة حديد IFT", "sector": "IFT", "unit": "Each", "stock": 3}, {"id": 663, "name": "بطاريه باس IFT", "sector": "IFT", "unit": "Each", "stock": 440}, {"id": 664, "name": "شنطه طبيب بيطرى", "sector": "Innoval", "unit": "Each", "stock": 2}, {"id": 665, "name": "جهاز الكترويك سبرى", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 666, "name": "West Xerox WC 7855", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 667, "name": "Toner Black Xerox WC 3325", "sector": "IT", "unit": "Each", "stock": 0}, {"id": 668, "name": "Drum Black Xerox WC 5230", "sector": "IT", "unit": "Each", "stock": 0}, {"id": 669, "name": "Drum Black Xerox WC 3655", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 670, "name": "Drum Yellow Xerox WC C8145", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 671, "name": "Drum Magenta Xerox WC C8145", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 672, "name": "Drum Cyan Xerox WC C8145", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 673, "name": "Toner black C405", "sector": "IT", "unit": "Each", "stock": 0}, {"id": 674, "name": "Toner cyan C405", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 675, "name": "Toner yellow C405", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 676, "name": "Toner magenta C405", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 677, "name": "Toner Black Xerox WC C7025", "sector": "IT", "unit": "Each", "stock": 4}, {"id": 678, "name": "Drum Black c405", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 679, "name": "Drum Yellow c405", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 680, "name": "Drum Magenta c405", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 681, "name": "Drum Cyan c405", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 682, "name": "كشاف طوارء فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 683, "name": "منبه فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 0}, {"id": 684, "name": "بالطو ابيض نيوتيك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 685, "name": "مقص تشريح  نيوتيك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 686, "name": "دنجلر اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 687, "name": "شنطة جلد يد فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 12}, {"id": 688, "name": "مشترك كهرباء انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 689, "name": "وصله taeb c انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 690, "name": "وصله ثلاثية  انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 691, "name": "شنطة كروس 2 انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 692, "name": "زمزمية مياة انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 693, "name": "شنطة قماش انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 694, "name": "شنطة ظهر فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 695, "name": "Tab S6", "sector": "IT", "unit": "Each", "stock": 0}, {"id": 696, "name": "علبه جوانتى نيو تيك", "sector": "Neo-Tec", "unit": "Each", "stock": 140}, {"id": 697, "name": "كشاف  catosal بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 58}, {"id": 698, "name": "كشاف  AFOVAXPUR بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 198}, {"id": 699, "name": "Laptop Lenov E14 8GB", "sector": "IT", "unit": "Each", "stock": 0}, {"id": 700, "name": "Laptop Lenov E14 16GB", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 701, "name": "Laptop LenovT14 16GB", "sector": "IT", "unit": "Each", "stock": 0}, {"id": 702, "name": "Laptop LenovE16 16GB", "sector": "IT", "unit": "Each", "stock": 0}, {"id": 703, "name": "كشاف طوارء فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 704, "name": "قلم بلاستك افتو فاكس", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 705, "name": "كاب فركون اس انوفال", "sector": "Innoval", "unit": "Each", "stock": 500}, {"id": 706, "name": "محفظة بازبور", "sector": "السويدى", "unit": "Each", "stock": 0}, {"id": 707, "name": "كشاف", "sector": "السويدى", "unit": "Each", "stock": 0}, {"id": 708, "name": "شنط كروس", "sector": "السويدى", "unit": "Each", "stock": 120}, {"id": 709, "name": "قلم معدن", "sector": "السويدى", "unit": "Each", "stock": 0}, {"id": 710, "name": "ترمس نيوتك", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 711, "name": "ترمس  فيت ميدكا", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 712, "name": "ترمس  فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 713, "name": "الاب توب dell", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 714, "name": "Whirl-Pak filter bags, 7 oz بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 715, "name": "بلوك نوت  اينوفاكس صعير", "sector": "Innoval", "unit": "Each", "stock": 930}, {"id": 716, "name": "ورق فواتير فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 7}, {"id": 717, "name": "VIP  بوكس IFT", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 718, "name": "VIP  بوكس IFT 2", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 719, "name": "اجنده 2025", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 720, "name": "كراته", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 721, "name": "قلم معدن", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 722, "name": "ميدلية", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 723, "name": "VIP  بوكس IFT3", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 724, "name": "استند موبيل  سيلكون رونيو", "sector": "Runuo", "unit": "Each", "stock": 200}, {"id": 725, "name": "SAMSUNG-S9 FE 5G", "sector": "IT", "unit": "Each", "stock": 1}, {"id": 726, "name": "بوكس  هدايا اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 727, "name": "وصله ثلاثية  اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 728, "name": "نوت بوك اولميد", "sector": "Allmed", "unit": "Each", "stock": 73}, {"id": 729, "name": "مخطط شهري اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 730, "name": "VIP  بوكس الاستراد", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 731, "name": "شنطة كروس الاستراد", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 732, "name": "قلم معدن الاستراد", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 733, "name": "اجندة الاستراد", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 734, "name": "ميدالية الاستراد", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 735, "name": "كراته الاستراد", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 736, "name": "مقلمة الاستراد", "sector": "IFT", "unit": "Each", "stock": 62}, {"id": 737, "name": "نتيجة مكتب الاستراد", "sector": "IFT", "unit": "Each", "stock": 72}, {"id": 738, "name": "شاشة  Lenovo 24", "sector": "IFT", "unit": "Each", "stock": 1}, {"id": 739, "name": "دبابيس دياسة كبيرة", "sector": "IFT", "unit": "Each", "stock": 1}, {"id": 740, "name": "انبوبت امير", "sector": "IFT", "unit": "Each", "stock": 40}, {"id": 741, "name": "دباسة دبابيس صغيرة", "sector": "IFT", "unit": "Each", "stock": 50}, {"id": 742, "name": "باور بنك  بايفترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 743, "name": "رشاش 5 لتر بروفارم", "sector": "Profarm", "unit": "Each", "stock": 2}, {"id": 744, "name": "قلم بلاستك FELOCELL", "sector": "Petal", "unit": "Each", "stock": 150}, {"id": 745, "name": "قلم بلاستك DEFENSOR 3", "sector": "Petal", "unit": "Each", "stock": 150}, {"id": 746, "name": "قلم بلاستك revolution", "sector": "Petal", "unit": "Each", "stock": 100}, {"id": 747, "name": "قلم بلاستكvangliard", "sector": "Petal", "unit": "Each", "stock": 150}, {"id": 748, "name": "قلم بلاستكsimparica trio", "sector": "Petal", "unit": "Each", "stock": 150}, {"id": 749, "name": "قلم بلاستك apoaue", "sector": "Petal", "unit": "Each", "stock": 149}, {"id": 750, "name": "شنطة كروس اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 751, "name": "شنط لاب توب فورتى", "sector": "Fortivet", "unit": "Each", "stock": 73}, {"id": 752, "name": "كشاف كبير فورتى", "sector": "Fortivet", "unit": "Each", "stock": 22}, {"id": 753, "name": "قلم معدن فورتى", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 754, "name": "شنط يد جلد فورتى", "sector": "Fortivet", "unit": "Each", "stock": 70}, {"id": 755, "name": "شنط قماش فورتى", "sector": "Fortivet", "unit": "Each", "stock": 1000}, {"id": 756, "name": "هولدر بلاستك 20 جيب", "sector": "IFT", "unit": "Each", "stock": 399}, {"id": 757, "name": "ايصال استلام شيكات انوفال", "sector": "Innoval", "unit": "Each", "stock": 100}, {"id": 758, "name": "ايصال استلام شيكات فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 80}, {"id": 759, "name": "فواتير  نيوتيك", "sector": "Neo-Tec", "unit": "Each", "stock": 6}, {"id": 760, "name": "حافظة توريد شيكات فورتى", "sector": "Fortivet", "unit": "Each", "stock": 30}, {"id": 761, "name": "طلب توريد بظاعة فورتى", "sector": "Fortivet", "unit": "Each", "stock": 30}, {"id": 762, "name": "حافظة توريد شيكات  بيتال", "sector": "Petal", "unit": "Each", "stock": 50}, {"id": 763, "name": "حافظة تحصيل نقدية بيتال", "sector": "Petal", "unit": "Each", "stock": 0}, {"id": 764, "name": "شنط لاب طهر نيوتيك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 765, "name": "شنطة يد انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 766, "name": "ايصال استلام نقدية نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 100}, {"id": 767, "name": "بلوك نوت كبير  100ورقة فورتى فبت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 768, "name": "بلوك نوت صغير  فورتى فبت", "sector": "Fortivet", "unit": "Each", "stock": 849}, {"id": 769, "name": "فلم معدن IFT", "sector": "IFT", "unit": "Each", "stock": 250}, {"id": 770, "name": "زمزمية مياة بايفترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 771, "name": "شنط بلاستك وسط بايفترا", "sector": "Bivetra", "unit": "Each", "stock": 75}, {"id": 772, "name": "براية IFT", "sector": "IFT", "unit": "Each", "stock": 100}, {"id": 773, "name": "ميزان حساس نيو تك", "sector": "Neo-Tec", "unit": "Each", "stock": 42}, {"id": 774, "name": "وصلة USB نيوتيك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 775, "name": "اقلام LYSOPAST", "sector": "Bivetra", "unit": "Each", "stock": 1050}, {"id": 776, "name": "متر قياس+ ميدالية فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 777, "name": "كمبروسور فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 778, "name": "شمسية   فورتى فبت", "sector": "Fortivet", "unit": "Each", "stock": 60}, {"id": 779, "name": "ماج   فورتى فبت", "sector": "Fortivet", "unit": "Each", "stock": 44}, {"id": 780, "name": "ورق الشركة IFT", "sector": "IFT", "unit": "Each", "stock": 10}, {"id": 781, "name": "ايصال استلام نقدية اصل IFT", "sector": "IFT", "unit": "Each", "stock": 100}, {"id": 782, "name": "ايصال استلام بضاعة انوفال", "sector": "Innoval", "unit": "Each", "stock": 30}, {"id": 783, "name": "بلوك نوت فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 784, "name": "ساعة حائط  فووتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 33}, {"id": 785, "name": "بالطو ابيض فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 786, "name": "شماسة سيارة فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 44}, {"id": 787, "name": "زمزمية مياة كبيرة فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 20}, {"id": 788, "name": "زمزمية مياة صغيرة  فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 20}, {"id": 789, "name": "شنطة كروس فورتى فيت 2", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 790, "name": "محفظه  فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 99}, {"id": 791, "name": "ماج حرارى فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 66}, {"id": 792, "name": "اله حاسبه ورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 105}, {"id": 793, "name": "بدلة نصف كم للتحصين فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 794, "name": "بدلة نصف كم للتحصين رونيو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 795, "name": "شنطة عدة  فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 4}, {"id": 796, "name": "شنط كتان بايفترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 797, "name": "محفظة نقدية اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 798, "name": "كاب اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 799, "name": "شنطةوسط فورتى فيت procent HVTIBD", "sector": "Fortivet", "unit": "Each", "stock": 49}, {"id": 800, "name": "ماج حرارى ديجيتل فورتى فيت 2", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 801, "name": "شنط قماش فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 250}, {"id": 802, "name": "مروحه بالبجورة فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 803, "name": "دنجلر frontline   اقراص بروبيت", "sector": "ProPet", "unit": "Each", "stock": 25}, {"id": 804, "name": "دنجلر frontline   اسبرى بروبيت", "sector": "ProPet", "unit": "Each", "stock": 50}, {"id": 805, "name": "شنطة عد ة ققط  بروبيت", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 806, "name": "مسك  بروبيت", "sector": "ProPet", "unit": "Each", "stock": 1}, {"id": 807, "name": "شنط بلاستك صغيرة  بروبيت", "sector": "ProPet", "unit": "Each", "stock": 50}, {"id": 808, "name": "شنط بلاستك كبيرة بروبيت", "sector": "ProPet", "unit": "Each", "stock": 75}, {"id": 809, "name": "فولدر ورق فاليوفيت", "sector": "Valuvet", "unit": "Each", "stock": 100}, {"id": 810, "name": "وراقة ومقلمة مكتب اكريلك فالو بيت", "sector": "Valupet", "unit": "Each", "stock": 118}, {"id": 811, "name": "طقم مكتب   بروبيتnaxgard", "sector": "ProPet", "unit": "Each", "stock": 0}, {"id": 812, "name": "كاب  بافيترا  FENC VIS", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 813, "name": "برنيطه بافيترا  FENC VIS", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 814, "name": "تي شيرت بافيترا  FENC VIS", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 815, "name": "فوطه بافيترا  FENC VIS", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 816, "name": "زمزمية بافيترا  FENC VIS", "sector": "Bivetra", "unit": "Each", "stock": 55}, {"id": 817, "name": "قميص  بافيترا  FENC VIS", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 818, "name": "شماسة سيارة فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 819, "name": "ماج  بيست فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 820, "name": "شاحن سيارة فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 821, "name": "مشترك كهرباء فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 822, "name": "شاشة   24 SAMSUNG", "sector": "IT", "unit": "Each", "stock": 0}, {"id": 823, "name": "قلم معدن AVINEW +H120", "sector": "Neo-Tec", "unit": "Each", "stock": 300}, {"id": 824, "name": "كاتيل استانليس", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 825, "name": "قلم بلاستك Gallimune *h9+nd", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 826, "name": "كشاف انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 827, "name": "شنطة قماش بروفارم", "sector": "Profarm", "unit": "Each", "stock": 450}, {"id": 828, "name": "Hand blender      Novavax", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 829, "name": "شنطه قماش Novavax", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 830, "name": "عدة مفكات بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 831, "name": "كمبروسن بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 832, "name": "شاحن  وير لس بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 833, "name": "شنطة يد بروفارم", "sector": "Profarm", "unit": "Each", "stock": 8}, {"id": 834, "name": "Daa FitSماج  بروفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 835, "name": "قلم فيت ميدكا Gallimune* H9+ND", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 836, "name": "بلوك نوت  فاكس ترند COBRA", "sector": "Vaxi-Trend", "unit": "Each", "stock": 150}, {"id": 837, "name": "شنطه قماش  فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 600}, {"id": 838, "name": "بروشور  نيو تيك vaxxitek  HVT+IBD+ND", "sector": "Neo-Tec", "unit": "Each", "stock": 800}, {"id": 839, "name": "فلاير رونيو", "sector": "Runuo", "unit": "Each", "stock": 400}, {"id": 840, "name": "بوستر  فالوبيت FULL", "sector": "Valupet", "unit": "Each", "stock": 200}, {"id": 841, "name": "Wireless Mouse", "sector": "IT", "unit": "Each", "stock": 5}, {"id": 842, "name": "Keyboard & Mouse Wireless", "sector": "IT", "unit": "Each", "stock": 5}, {"id": 843, "name": "كمبروسن فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 844, "name": "بلوك نوت اولميد", "sector": "Allmed", "unit": "Each", "stock": 130}, {"id": 845, "name": "بلوك نوت لTROVN C ND", "sector": "Vaxi-Trend", "unit": "Each", "stock": 190}, {"id": 846, "name": "بلوك نوت فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 847, "name": "بلوك نوت PREVEXXION", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 848, "name": "بروشور  PREVEXXION", "sector": "Vaxi-Trend", "unit": "Each", "stock": 200}, {"id": 849, "name": "بروشور {ِVAXXITEK HVT+IBD", "sector": "Vaxi-Trend", "unit": "Each", "stock": 250}, {"id": 850, "name": "بروشور BEST", "sector": "Vetmedica", "unit": "Each", "stock": 200}, {"id": 851, "name": "بروشورspecramast DC", "sector": "Allmed", "unit": "Each", "stock": 300}, {"id": 852, "name": "بروشورordeseal", "sector": "Allmed", "unit": "Each", "stock": 200}, {"id": 853, "name": "بروشورEXCEDE", "sector": "Allmed", "unit": "Each", "stock": 100}, {"id": 854, "name": "بروشورINFORCE 3", "sector": "Allmed", "unit": "Each", "stock": 500}, {"id": 855, "name": "شنط كرتون نبوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 300}, {"id": 856, "name": "اى بوكس  فيت ميدكا", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 857, "name": "اى بوكس  فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 858, "name": "بوكس كرتون نيوتيك", "sector": "Neo-Tec", "unit": "Each", "stock": 65}, {"id": 859, "name": "فولدر جلد فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 860, "name": "نتيجة اكرليك بيتال", "sector": "Petal", "unit": "Each", "stock": 0}, {"id": 861, "name": "أكياس بلاستيكية مع كرتون Zeniouin", "sector": "Petal", "unit": "Each", "stock": 15000}, {"id": 862, "name": "Tot Bag شنطة كتان بيتال", "sector": "Petal", "unit": "Each", "stock": 135}, {"id": 863, "name": "بلوك نوت رونيو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 864, "name": "ساعة حائط رونيو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 865, "name": "فلاير  بيتال سيمباريكا تريو", "sector": "Petal", "unit": "Each", "stock": 400}, {"id": 866, "name": "بالطو ابيض فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 25}, {"id": 867, "name": "كارت فلاشه بايفترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 868, "name": "رشاش برفارم", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 869, "name": "ماكينة فوم انوفال", "sector": "Innoval", "unit": "Each", "stock": 5}, {"id": 870, "name": "Power Bank   فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 871, "name": "bag شنطه فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 872, "name": "Rollup  AVINEW +H120 نيوتيك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 873, "name": "اشعار خصم ضريبى بروفارم", "sector": "Profarm", "unit": "Each", "stock": 5}, {"id": 874, "name": "اشعار خصم عملاء بروفارم", "sector": "Profarm", "unit": "Each", "stock": 5}, {"id": 875, "name": "كشف تسويه عهدة بروفارم", "sector": "Profarm", "unit": "Each", "stock": 25}, {"id": 876, "name": "قلم معدن بروفام", "sector": "Profarm", "unit": "Each", "stock": 500}, {"id": 877, "name": "بدله طبيب اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 878, "name": "جهاز مساج طهر اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 879, "name": "جهاز مساج رقبه اولميد", "sector": "Allmed", "unit": "Each", "stock": 0}, {"id": 880, "name": "بيت خشب بيتال", "sector": "Petal", "unit": "Each", "stock": 35}, {"id": 881, "name": "قلم بلاسيتك  فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 500}, {"id": 882, "name": "زجاجة مياه POULVAC   IB primer", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 883, "name": "ماج procerta  فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 90}, {"id": 884, "name": "كشاف * اسبيكر فورتى فيت IBD+ND", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 885, "name": "وصلة USB ثلاثية فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 27}, {"id": 886, "name": "محفظة نقدية فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 887, "name": "كشاف مكتب  2 فورتى فيت HVTIBD", "sector": "Fortivet", "unit": "Each", "stock": 23}, {"id": 888, "name": "مروجة مكتب  نيوتيك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 889, "name": "زجاجة مياه  AVINEW نيوتيك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 890, "name": "بور بنك سيارة فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 5}, {"id": 891, "name": "ماكينه قهوة", "sector": "Innoval", "unit": "Each", "stock": 8}, {"id": 892, "name": "شنطه ظهر قطه فاليوبيت", "sector": "Valuvet", "unit": "Each", "stock": 0}, {"id": 893, "name": "حافظه تحصيل نقديه فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 0}, {"id": 894, "name": "إيصال استلام بضاعه فاليوبيت", "sector": "Valupet", "unit": "Each", "stock": 80}, {"id": 895, "name": "ساعة مكتب فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 896, "name": "اى بوكس 45 لتر فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 897, "name": "اى بوكس 23 لتر نيو تيك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 898, "name": "ايصال استلام شيكات فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 40}, {"id": 899, "name": "ورق فواتير  فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 1500}, {"id": 900, "name": "بلوك نوت نيو تيك AVINEW +H120", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 901, "name": "بروشور VAXXITEK  HVT+IBD+H5", "sector": "Vaxi-Trend", "unit": "Each", "stock": 150}, {"id": 902, "name": "اسبيكر  فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 903, "name": "ماج بايفترا BOVIVAX LSD-N", "sector": "Bivetra", "unit": "Each", "stock": 450}, {"id": 904, "name": "كاب بايفترا BOVIVAX LSD-N", "sector": "Bivetra", "unit": "Each", "stock": 80}, {"id": 905, "name": "بروشور بايفتراFENCVIS", "sector": "Bivetra", "unit": "Each", "stock": 1300}, {"id": 906, "name": "بلوك نوت بايفتراFENCVIS", "sector": "Bivetra", "unit": "Each", "stock": 1350}, {"id": 907, "name": "قلم بايفترا FENCVIS", "sector": "Bivetra", "unit": "Each", "stock": 1100}, {"id": 908, "name": "ماج شاى  catosal /Elanco", "sector": "Bivetra", "unit": "Each", "stock": 24}, {"id": 909, "name": "كوستر catosal /Elanco", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 910, "name": "كاميرة مراقبة نيوتيك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 911, "name": "زمزمية كبيرة  انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 912, "name": "زمزمية صغيرة  انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 913, "name": "لانش بوكس كتير أنوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 914, "name": "بلوك نوت وسط 50ورقة فورتى فبت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 915, "name": "شنطة حافظة لقاحات فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 916, "name": "كاتيل  بيتال", "sector": "Petal", "unit": "Each", "stock": 0}, {"id": 917, "name": "شنط لاب توب نيوتيك", "sector": "Neo-Tec", "unit": "Each", "stock": 0}, {"id": 918, "name": "حافظة لقاحات فاكس سيف انوفاال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 919, "name": "بادت موس", "sector": "IFT", "unit": "Each", "stock": 46}, {"id": 920, "name": "مقص تشريح فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 921, "name": "غمامة واجه فاكس ترندeye goggle", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 922, "name": "فواحة مكتب فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 923, "name": "شنط قماش فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 35}, {"id": 924, "name": "كشاف رونيو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 925, "name": "بلوك نوت جالميون  ND*H9 فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 1710}, {"id": 926, "name": "AVINEWتى شرت  نيو تيك", "sector": "Neo-Tec", "unit": "Each", "stock": 189}, {"id": 927, "name": "استيكر فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 928, "name": "تى شيرت فاكس ترندVAXXITEK  HVT+IBD+H5", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 929, "name": "مضرب نسكافية فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 930, "name": "بدلة مزارع فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 310}, {"id": 931, "name": "مقاس سرعة رياح انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 932, "name": "مقاس رطوبه انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 933, "name": "مكوة ملابس فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 35}, {"id": 934, "name": "اى بوكس بايفيترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 935, "name": "علبة مكعب ثلج بايفترا", "sector": "Bivetra", "unit": "Each", "stock": 0}, {"id": 936, "name": "بروشور جالميون  ND*H9 فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 250}, {"id": 937, "name": "بلوك نوت فاكس سيف MG/MS", "sector": "Vetmedica", "unit": "Each", "stock": 100}, {"id": 938, "name": "اقلام  MG/MS", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 939, "name": "شنطة مستندات فاكس سيف MG/MS", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 940, "name": "جهاز Wi-FI", "sector": "Vaxi-Trend", "unit": "Each", "stock": 27}, {"id": 941, "name": "سرنجات 10 سم", "sector": "Innoval", "unit": "Each", "stock": 29250}, {"id": 942, "name": "سرنجات5 سم", "sector": "Innoval", "unit": "Each", "stock": 900}, {"id": 943, "name": "جهاز وريد", "sector": "Innoval", "unit": "Each", "stock": 5500}, {"id": 944, "name": "بدلة مزارع رونيو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 945, "name": "شنط قماش رونيو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 946, "name": "كاتيل اولميد", "sector": "Allmed", "unit": "Each", "stock": 22}, {"id": 947, "name": "شنط قماش اولميد", "sector": "Allmed", "unit": "Each", "stock": 48}, {"id": 948, "name": "دفاتر تقارير تحصين  مزارع", "sector": "Innoval", "unit": "Each", "stock": 200}, {"id": 949, "name": "VIP  بوكس IFT 1", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 950, "name": "VIP  بوكس IFT 3", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 951, "name": "ماج IFT", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 952, "name": "شطة يد *محفظه*قلم*ميدلية IFT", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 953, "name": "قلم معدن فورتى ميون", "sector": "Fortivet", "unit": "Each", "stock": 350}, {"id": 954, "name": "قلم بلاستك فورتى ميون", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 955, "name": "الة حاسبة فاكس ترند", "sector": "Vaxi-Trend", "unit": "Each", "stock": 0}, {"id": 956, "name": "الة حاسبةرونيو", "sector": "Runuo", "unit": "Each", "stock": 0}, {"id": 957, "name": "قلم معدن Novavax", "sector": "Novavax", "unit": "Each", "stock": 500}, {"id": 958, "name": "شنط ظهر Novavax", "sector": "Novavax", "unit": "Each", "stock": 30}, {"id": 959, "name": "شنط ظهر vipNovavax", "sector": "Novavax", "unit": "Each", "stock": 15}, {"id": 960, "name": "قلم بلاستيكNovavax", "sector": "Novavax", "unit": "Each", "stock": 400}, {"id": 961, "name": "قلم رصاصNovavax", "sector": "Novavax", "unit": "Each", "stock": 0}, {"id": 962, "name": "شنط كروسNovavax", "sector": "Novavax", "unit": "Each", "stock": 45}, {"id": 963, "name": "معطر Novavax", "sector": "Novavax", "unit": "Each", "stock": 5}, {"id": 964, "name": "كوستر Novavax", "sector": "Novavax", "unit": "Each", "stock": 0}, {"id": 965, "name": "قاعدة موبيلNovavax", "sector": "Novavax", "unit": "Each", "stock": 30}, {"id": 966, "name": "بلوك نوت Novavax", "sector": "Novavax", "unit": "Each", "stock": 550}, {"id": 967, "name": "معطر Profarm", "sector": "Profarm", "unit": "Each", "stock": 18}, {"id": 968, "name": "شنط ظهر vipProfarm", "sector": "Profarm", "unit": "Each", "stock": 20}, {"id": 969, "name": "كوستر Profarm", "sector": "Profarm", "unit": "Each", "stock": 0}, {"id": 970, "name": "قاعدة موبيلProfarm", "sector": "Profarm", "unit": "Each", "stock": 53}, {"id": 971, "name": "بلوك نوت  2026Profarm", "sector": "Profarm", "unit": "Each", "stock": 500}, {"id": 972, "name": "كشاف راسىAllmed", "sector": "Allmed", "unit": "Each", "stock": 48}, {"id": 973, "name": "فولدر vip Vetmedica", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 974, "name": "ماج  BEST", "sector": "Vetmedica", "unit": "Each", "stock": 185}, {"id": 975, "name": "محفظة نقدية Innoval", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 976, "name": "محفظة حريمى Innoval", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 977, "name": "حزام رجالى  Innoval", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 978, "name": "حافظة لقاحات رونيو", "sector": "Runuo", "unit": "Each", "stock": 46}, {"id": 979, "name": "مكنسة سيارة فيت ميدكا", "sector": "Vetmedica", "unit": "Each", "stock": 2}, {"id": 980, "name": "Bivetraشنطة ظهر", "sector": "Bivetra", "unit": "Each", "stock": 119}, {"id": 981, "name": "كرسى طبى  فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 50}, {"id": 982, "name": "سماعه طبيه", "sector": "Allmed", "unit": "Each", "stock": 28}, {"id": 983, "name": "مقص 20سم فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 50}, {"id": 984, "name": "مقص 20سم فورتى ميون", "sector": "Fortivet", "unit": "Each", "stock": 47}, {"id": 985, "name": "طقم مقطات فورتى فيت", "sector": "Fortivet", "unit": "Each", "stock": 30}, {"id": 986, "name": "طقم مقطات فورتى ميون", "sector": "Fortivet", "unit": "Each", "stock": 19}, {"id": 987, "name": "اقلام بلاستك  فاكس سيف MG/MS", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 988, "name": "اقلام بلاستك  BEST", "sector": "Vetmedica", "unit": "Each", "stock": 0}, {"id": 989, "name": "شنط طهر انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 990, "name": "شنطة عده انوفال", "sector": "Innoval", "unit": "Each", "stock": 0}, {"id": 991, "name": "منبه مكتب نيو تيك", "sector": "Neo-Tec", "unit": "Each", "stock": 55}, {"id": 992, "name": "بالطو ابيض نيو تيك", "sector": "Neo-Tec", "unit": "Each", "stock": 122}, {"id": 993, "name": "بلوك نوت  AVINEW نيوتك", "sector": "Neo-Tec", "unit": "Each", "stock": 400}, {"id": 994, "name": "بلوك نوت  جالميون ND+H9", "sector": "Vetmedica", "unit": "Each", "stock": 550}, {"id": 995, "name": "WIreless CHARGERشاجن", "sector": "Fortivet", "unit": "Each", "stock": 50}, {"id": 996, "name": "شنطه كروس HVT+IBD", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 997, "name": "شنطه كروس جلد", "sector": "Fortivet", "unit": "Each", "stock": 50}, {"id": 998, "name": "مسدس تبخير فورتي", "sector": "Fortivet", "unit": "Each", "stock": 340}, {"id": 999, "name": "بوستر فورتي فيت", "sector": "Fortivet", "unit": "Each", "stock": 200}, {"id": 1000, "name": "جهاز فواحه فورتي فيت", "sector": "Fortivet", "unit": "Each", "stock": 200}, {"id": 1001, "name": "بلوك نوت فورتي فيت", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 1002, "name": "شنطه قماش فورتي ميون", "sector": "Fortivet", "unit": "Each", "stock": 500}, {"id": 1003, "name": "شنط بلاستك فورتي ميون", "sector": "Fortivet", "unit": "Each", "stock": 200}, {"id": 1004, "name": "بوستر فورتي ميون", "sector": "Fortivet", "unit": "Each", "stock": 200}, {"id": 1005, "name": "بلوك نوت فورتي ميون", "sector": "Fortivet", "unit": "Each", "stock": 250}, {"id": 1006, "name": "بروشور ليزوباست", "sector": "Bivetra", "unit": "Each", "stock": 200}, {"id": 1007, "name": "كاب vaxxon NDIB", "sector": "Novavax", "unit": "Each", "stock": 82}, {"id": 1008, "name": "كاب VAXXONGUMBORO2", "sector": "Novavax", "unit": "Each", "stock": 279}, {"id": 1009, "name": "كاب VAXXON ND BROILER", "sector": "Novavax", "unit": "Each", "stock": 140}, {"id": 1010, "name": "كتيب INNOGUARD", "sector": "Innoval", "unit": "Each", "stock": 3000}, {"id": 1011, "name": "شنط توتي باك", "sector": "Novavax", "unit": "Each", "stock": 300}, {"id": 1012, "name": "شنط بلاستيك نوفا فاكس", "sector": "Novavax", "unit": "Each", "stock": 250}, {"id": 1013, "name": "فلاير فاكسون ثلاثي", "sector": "Novavax", "unit": "Each", "stock": 250}, {"id": 1014, "name": "فلاير لاسوتا", "sector": "Novavax", "unit": "Each", "stock": 1000}, {"id": 1015, "name": "فلاير فاكسون جاامبوروا", "sector": "Novavax", "unit": "Each", "stock": 500}, {"id": 1016, "name": "فلاير فاكسون نيو كاسيل ND", "sector": "Novavax", "unit": "Each", "stock": 750}, {"id": 1017, "name": "شنطه ظهر", "sector": "Valuvet", "unit": "Each", "stock": 60}, {"id": 1018, "name": "شاشة  22 SAMSUNG", "sector": "IT", "unit": "Each", "stock": 3}, {"id": 1019, "name": "ايصال استلام بضاعه بيتال", "sector": "Petal", "unit": "Each", "stock": 0}, {"id": 1020, "name": "ايصال استلام شيكات بيتال", "sector": "Petal", "unit": "Each", "stock": 0}, {"id": 1021, "name": "حافظه تحصيل نقديه بيتال", "sector": "Petal", "unit": "Each", "stock": 0}, {"id": 1022, "name": "كزولك", "sector": "Allmed", "unit": "Each", "stock": 24}, {"id": 1023, "name": "حافظة لقاحات انسولين Bursinr 2", "sector": "Fortivet", "unit": "Each", "stock": 200}, {"id": 1024, "name": "قلم بلاسيتك  فاكس ترندHVT*IBD*H5", "sector": "Vaxi-Trend", "unit": "Each", "stock": 800}, {"id": 1025, "name": "كشاف  راس  فاكس سيف MG/MS", "sector": "Vetmedica", "unit": "Each", "stock": 44}, {"id": 1026, "name": "كشاف  راس   BEST", "sector": "Vetmedica", "unit": "Each", "stock": 45}, {"id": 1027, "name": "جهاز قياس الحرارة", "sector": "Innoval", "unit": "Each", "stock": 90}, {"id": 1028, "name": "جهاز قياس الرطوبه", "sector": "Innoval", "unit": "Each", "stock": 35}, {"id": 1029, "name": "جهاز  سرعة الرياح", "sector": "Innoval", "unit": "Each", "stock": 70}, {"id": 1030, "name": "سنون حقن 19Gفورتى ميون", "sector": "Fortivet", "unit": "Each", "stock": 44}, {"id": 1031, "name": "فولدر بلاستك 20جيب", "sector": "IFT", "unit": "Each", "stock": 0}, {"id": 1032, "name": "ID employees", "sector": "IFT", "unit": "Each", "stock": 250}, {"id": 1033, "name": "ID Medal- employees", "sector": "IFT", "unit": "Each", "stock": 400}, {"id": 1034, "name": "نوت بوك فورتى ميون POULVAC IB", "sector": "Fortivet", "unit": "Each", "stock": 0}, {"id": 1035, "name": "Techse0176", "sector": "Petal", "unit": "Each", "stock": 2}, {"id": 1036, "name": "techse0201", "sector": "Petal", "unit": "Each", "stock": 7}, {"id": 1037, "name": "Techse0001", "sector": "Petal", "unit": "Each", "stock": 0}, {"id": 1038, "name": "techse0199", "sector": "Petal", "unit": "Each", "stock": 8}, {"id": 1039, "name": "Techse0066", "sector": "Petal", "unit": "Each", "stock": 8}, {"id": 1040, "name": "techse0200", "sector": "Petal", "unit": "Each", "stock": 46}, {"id": 1041, "name": "techse0203", "sector": "Petal", "unit": "Each", "stock": 300}, {"id": 1042, "name": "techse0202", "sector": "Petal", "unit": "Each", "stock": 80}, {"id": 1043, "name": "techse0198", "sector": "Petal", "unit": "Each", "stock": 45}, {"id": 1044, "name": "فرشه حيونات اليفه", "sector": "Petal", "unit": "Each", "stock": 25}, {"id": 1045, "name": "قصافة حيونات اليفه", "sector": "Petal", "unit": "Each", "stock": 30}, {"id": 1046, "name": "ماج simparca TRIO", "sector": "Petal", "unit": "Each", "stock": 21}, {"id": 1047, "name": "ماسك وجه فورتى ميون", "sector": "Fortivet", "unit": "Each", "stock": 260}, {"id": 1048, "name": "ايصال استلام نقدية اولميد", "sector": "Allmed", "unit": "Each", "stock": 40}, {"id": 1049, "name": "طلب استرداد اولميد", "sector": "Allmed", "unit": "Each", "stock": 20}, {"id": 1050, "name": "كشف تسويه عهدة اولميد", "sector": "Allmed", "unit": "Each", "stock": 30}, {"id": 1051, "name": "حافظة توريد شيكات اولميد", "sector": "Allmed", "unit": "Each", "stock": 20}, {"id": 1052, "name": "ايصال استلام نقدية نوفافكس", "sector": "Novavax", "unit": "Each", "stock": 20}, {"id": 1053, "name": "طلب استرداد نوفافكس", "sector": "Novavax", "unit": "Each", "stock": 30}, {"id": 1054, "name": "كشف تسويه عهدة نوفافكس", "sector": "Novavax", "unit": "Each", "stock": 5}, {"id": 1055, "name": "حافظة توريد شيكات نوفافكس", "sector": "Novavax", "unit": "Each", "stock": 50}, {"id": 1056, "name": "طلب صرف نوفافكس", "sector": "Novavax", "unit": "Each", "stock": 40}, {"id": 1057, "name": "ايصال استلام شيكات وفافكس", "sector": "Novavax", "unit": "Each", "stock": 100}, {"id": 1058, "name": "حافظة تحصيل نقدية نوفافكس", "sector": "Novavax", "unit": "Each", "stock": 50}, {"id": 1059, "name": "ايصال استلام بضاعة نوفافكس", "sector": "Novavax", "unit": "Each", "stock": 12}, {"id": 1060, "name": "اشعار خصم عملاء نوفافكس", "sector": "Novavax", "unit": "Each", "stock": 5}, {"id": 1061, "name": "طلب توريد بضاعة نوفافكس", "sector": "Novavax", "unit": "Each", "stock": 30}, {"id": 1062, "name": "فواتير ضريبة نوفافكس", "sector": "Novavax", "unit": "Each", "stock": 5}, {"id": 1063, "name": "ايصال استلام نقدية بيتال", "sector": "Petal", "unit": "Each", "stock": 80}, {"id": 1064, "name": "ايصال استلام شيكات بيتال", "sector": "Petal", "unit": "Each", "stock": 60}, {"id": 1065, "name": "طلب صرف بيتال", "sector": "Petal", "unit": "Each", "stock": 50}, {"id": 1066, "name": "كشف تسويه عهدة بيتال", "sector": "Petal", "unit": "Each", "stock": 0}, {"id": 1067, "name": "كشف تسويه عهدة بليفترا", "sector": "Bivetra", "unit": "Each", "stock": 10}, {"id": 1068, "name": "حافظه توريد شيكات فيت ميديكا", "sector": "Vetmedica", "unit": "Each", "stock": 50}, {"id": 1069, "name": "وصلة نت 1 متر", "sector": "Petal", "unit": "Each", "stock": 5}, {"id": 1070, "name": "وصلة نت 2 متر", "sector": "Petal", "unit": "Each", "stock": 5}, {"id": 1071, "name": "كابل باور", "sector": "Petal", "unit": "Each", "stock": 10}, {"id": 1072, "name": "مشترك كهرباء", "sector": "Petal", "unit": "Each", "stock": 3}, {"id": 1073, "name": "techse0210سوتش", "sector": "Petal", "unit": "Each", "stock": 8}];
+
+const SEED_USERS = [
+  {username:'admin', password:'sunny', name:'مدير النظام', role:'admin', sector:null, photo:null},
+  {username:'talib', password:'1234', name:'أحمد - طالب Bivetra', role:'requester', sector:'Bivetra', photo:null},
+  {username:'makhzan', password:'1234', name:'محمد عبدالله - أمين مخزن', role:'warehouse', sector:null, photo:null},
+  {username:'tawzee', password:'1234', name:'كريم سعيد - مندوب توزيع', role:'distribution', sector:null, photo:null},
+  {username:'hesabat', password:'1234', name:'سارة - حسابات', role:'accounts', sector:null, photo:null}
+];
+
+const SEED_DOCTORS = ['د. محمد أحمد - عيادة النور', 'د. سارة كمال - مركز الأمل', 'د. حسين علي - عيادة الشفاء'];
+const SEED_SUPPLIERS = ['شركة النور للطباعة', 'مؤسسة الدلتا للمطبوعات', 'شركة الأمانة للتوريدات المكتبية'];
+const REGIONS = ['بدون تحديد','القاهرة','الجيزة','الاسكندرية','الدقهلية','الشرقية','القليوبية','المنوفية','الغربية','كفر الشيخ','البحيرة','بورسعيد','الاسماعيلية','السويس','دمياط','بني سويف','الفيوم','المنيا','اسيوط','سوهاج','قنا','الاقصر','اسوان','المقطم','التجمع'];
+
+let DB = { users:SEED_USERS, products:SEED_PRODUCTS, requests:[], movements:[], doctors:SEED_DOCTORS, suppliers:SEED_SUPPLIERS, sectorLogos:{} };
+let dbReady = false;
+
+let S = { screen:'welcome', user:null, tab:'home', err:null, soundOn:false };
+
+/* ---------------- FIREBASE ---------------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyBiAQ-3L-mnIxdpEIG560HLk2K-bGnqMpQ",
+  authDomain: "promotional-material.firebaseapp.com",
+  projectId: "promotional-material",
+  storageBucket: "promotional-material.firebasestorage.app",
+  messagingSenderId: "819929038989",
+  appId: "1:819929038989:web:dce8c79ef74613d48e22c4"
+};
+firebase.initializeApp(firebaseConfig);
+const fbAuth = firebase.auth();
+const fbDB = firebase.database();
+const FB_ROOT = 'ift'; // all app data lives under this root node in Realtime Database
+
+/* ---------------- AMBIENT SOUND (synthesized, no external audio files) ---------------- */
+let audioCtx = null;
+let ambientNodes = [];
+function startAmbient(){
+  if(S.soundOn) return;
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state==='suspended') audioCtx.resume();
+    const master = audioCtx.createGain();
+    master.gain.value = 0.05;
+    master.connect(audioCtx.destination);
+    const freqs = [261.63, 329.63, 392.00];
+    freqs.forEach((f,i)=>{
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = f;
+      const g = audioCtx.createGain();
+      g.gain.value = 0;
+      osc.connect(g); g.connect(master);
+      osc.start();
+      const now = audioCtx.currentTime;
+      g.gain.linearRampToValueAtTime(0.6/(i+1), now + 2 + i*0.5);
+      ambientNodes.push({osc,g});
+    });
+    ambientNodes.push({master});
+    S.soundOn = true;
+  }catch(e){ /* audio not available, ignore silently */ }
+}
+function stopAmbient(){
+  ambientNodes.forEach(n=>{ try{ if(n.osc) n.osc.stop(); }catch(e){} });
+  ambientNodes = [];
+  S.soundOn = false;
+}
+function toggleAmbient(){ if(S.soundOn) stopAmbient(); else startAmbient(); render(); }
+
+/* ============== immediate first paint (no waiting on Firebase) ============== */
+render();
+
+/* Sign in anonymously so Firebase security rules can require auth!=null
+   while still letting our own username/password screen control who can
+   actually use the app. Data loads only after auth succeeds. */
+fbAuth.onAuthStateChanged(function(user){
+  if(user){ loadDB(); }
+});
+fbAuth.signInAnonymously().catch(function(err){
+  console.error('Firebase auth error:', err);
+  toast('تعذر الاتصال بقاعدة البيانات - تحقق من الإنترنت');
+  dbReady = true; // fall back to local seed data so the UI still works
+  render();
+});
+
+/* ---------------- STORAGE (Firebase Realtime Database) ---------------- */
+async function loadDB(){
+  try{
+    const [u,p,r,m,d,sl,sp] = await Promise.all([
+      safeGet('users'), safeGet('products'), safeGet('requests'), safeGet('movements'), safeGet('doctors'), safeGet('sectorLogos'), safeGet('suppliers')
+    ]);
+    DB.users = u ? JSON.parse(u) : SEED_USERS;
+    DB.products = p ? JSON.parse(p) : SEED_PRODUCTS;
+    DB.requests = r ? JSON.parse(r) : [];
+    DB.movements = m ? JSON.parse(m) : [];
+    DB.doctors = d ? JSON.parse(d) : SEED_DOCTORS;
+    DB.sectorLogos = sl ? JSON.parse(sl) : {};
+    DB.suppliers = sp ? JSON.parse(sp) : SEED_SUPPLIERS;
+    if(!u) await fbSet('users', DB.users);
+    if(!p) await fbSet('products', DB.products);
+    if(!d) await fbSet('doctors', DB.doctors);
+    if(!sp) await fbSet('suppliers', DB.suppliers);
+  }catch(e){ console.error('loadDB error:', e); /* keep seed defaults already set */ }
+  dbReady = true;
+  render();
+}
+async function safeGet(key){
+  try{
+    const snap = await fbDB.ref(FB_ROOT + '/' + key).get();
+    return snap.exists() ? snap.val() : null;
+  }catch(e){ console.error('Firebase read error ('+key+'):', e); return null; }
+}
+async function fbSet(key, value){
+  try{ await fbDB.ref(FB_ROOT + '/' + key).set(JSON.stringify(value)); }catch(e){ console.error('Firebase write error ('+key+'):', e); toast('تعذر حفظ البيانات - تحقق من الإنترنت'); }
+}
+async function saveUsers(){ return fbSet('users', DB.users); }
+async function saveProducts(){ return fbSet('products', DB.products); }
+async function saveRequests(){ return fbSet('requests', DB.requests); }
+async function saveMovements(){ return fbSet('movements', DB.movements); }
+async function saveDoctors(){ return fbSet('doctors', DB.doctors); }
+async function saveSuppliers(){ return fbSet('suppliers', DB.suppliers); }
+async function saveSectorLogos(){ return fbSet('sectorLogos', DB.sectorLogos); }
+
+/* ---------------- UTIL ---------------- */
+function uid(prefix){ return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function fmtDate(ts){ const d = new Date(ts); return d.toLocaleDateString('ar-EG',{day:'2-digit',month:'2-digit',year:'numeric'}); }
+function fmtDateTime(ts){ const d = new Date(ts); return d.toLocaleDateString('ar-EG',{day:'2-digit',month:'2-digit',year:'numeric'}) + ' ' + d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}); }
+function toast(msg){
+  const el = document.createElement('div');
+  el.className='toast-msg'; el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 2600);
+}
+function statusLabel(st){
+  return {pending_warehouse:'بانتظار المخزن', assigned_distribution:'قيد التسليم (توزيع)', delivered:'تم التسليم', rejected:'مرفوض'}[st] || st;
+}
+function statusPillClass(st){
+  return {pending_warehouse:'pending', assigned_distribution:'dist', delivered:'done', rejected:'rej'}[st] || '';
+}
+function findProduct(id){ return DB.products.find(p=>p.id===id); }
+function getSectors(){ return [...new Set(DB.products.map(p=>p.sector||'عام'))].sort(); }
+function visibleProducts(){
+  const u = S.user;
+  if(u && u.role==='requester' && u.sector){ return DB.products.filter(p=>(p.sector||'عام')===u.sector); }
+  return DB.products;
+}
+function avatarHTML(u, size){
+  size = size || 34;
+  if(u && u.photo){ return `<img src="${u.photo}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;flex-shrink:0;">`; }
+  const letter = u && u.name ? u.name.trim()[0] : '?';
+  return `<div class="user-ava" style="width:${size}px;height:${size}px;font-size:${Math.round(size*0.42)}px;">${letter}</div>`;
+}
+function topbarLogo(u){
+  if(u && u.sector && DB.sectorLogos[u.sector]) return DB.sectorLogos[u.sector];
+  return LOGO;
+}
+
+/* ---------------- WORKFLOW TRACKER ---------------- */
+function trackerHTML(r){
+  let stages;
+  if(r.status==='rejected'){
+    stages = [
+      {lbl:'الطلب', state:'done'},
+      {lbl:'المخزن', state:'rejected'},
+      {lbl:'مرفوض', state:'rejected'}
+    ];
+  } else if(r.deliveryMethod==='distribution' || r.status==='assigned_distribution'){
+    stages = [
+      {lbl:'الطلب', state:'done'},
+      {lbl:'المخزن', state: r.status==='pending_warehouse' ? 'current' : 'done'},
+      {lbl:'التوزيع', state: r.status==='assigned_distribution' ? 'current' : (r.status==='delivered' ? 'done' : 'pending')},
+      {lbl:'تم التسليم', state: r.status==='delivered' ? 'done' : 'pending'}
+    ];
+  } else {
+    stages = [
+      {lbl:'الطلب', state:'done'},
+      {lbl:'المخزن', state: r.status==='pending_warehouse' ? 'current' : 'done'},
+      {lbl:'تم التسليم', state: r.status==='delivered' ? 'done' : 'pending'}
+    ];
+  }
+  const renderStages = stages.slice().reverse();
+  return `<div class="tracker">${renderStages.map((s,i)=>{
+    const prev = i>0 ? renderStages[i-1] : null;
+    let lineClass = '';
+    if(prev){
+      if(prev.state==='rejected') lineClass = 'rej';
+      else if(prev.state==='done' || prev.state==='current') lineClass = 'filled';
+    }
+    return `
+    <div class="step ${s.state==='done'?'done':s.state==='current'?'current':s.state==='rejected'?'rejected':''}">
+      ${i>0?`<div class="line ${lineClass}"></div>`:''}
+      <div class="dot">${s.state==='done'?'✓':s.state==='rejected'?'✕':''}</div>
+      <div class="lbl">${s.lbl}</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+/* ============================ RENDER ROOT ============================ */
+function render(){
+  const app = document.getElementById('app');
+  if(S.screen==='welcome') app.innerHTML = rWelcome();
+  else if(S.screen==='signin') app.innerHTML = rSignIn();
+  else app.innerHTML = rShell();
+  bindEvents();
+}
+
+/* ---------------- WELCOME (shows instantly, no DB wait) ---------------- */
+function rWelcome(){
+  return `<div class="welcome">
+    <button class="sound-toggle" data-a="toggle-sound" title="موسيقى الخلفية">${S.soundOn?'🔊':'🔈'}</button>
+    <img class="wlogo" src="${LOGO}" alt="IFT">
+    <div class="corp">IFT CORPORATION</div>
+    <h1>مستلزمات الدعاية والمكتبية</h1>
+    <p>نظام متابعة أرصدة مواد الدعاية والمكتبية، حركات التوريد والتسليم للأطباء عبر المخزن الرئيسي أو مندوبي التوزيع.</p>
+    <div class="stages">
+      <span>📦 أرصدة</span><span>📥 توريد</span><span>🧾 طلبات</span><span>🚚 تسليم</span><span>📊 تقارير</span>
+    </div>
+    <button class="btn-primary" data-a="go-si">دخول إلى النظام</button>
+  </div>`;
+}
+
+/* ---------------- SIGN IN ---------------- */
+function rSignIn(){
+  return `<div class="signin">
+    <img class="slogo" src="${LOGO}" alt="IFT">
+    <h2>تسجيل الدخول</h2>
+    <div class="sub">IFT Corporation — مستلزمات الدعاية والمكتبية</div>
+    ${S.err?`<div class="err">${S.err}</div>`:!dbReady?`<div class="info-note">⏳ جارِ تجهيز البيانات في الخلفية...</div>`:''}
+    <form id="sif">
+      <div class="field"><label>اسم المستخدم</label><input name="un" autocomplete="username" required></div>
+      <div class="field"><label>كلمة المرور</label><input type="password" name="pw" autocomplete="current-password" required></div>
+      <button class="btn-primary" type="submit" style="margin-top:8px;">دخول</button>
+    </form>
+    <img class="bottom-logo" src="${LOGO}" alt="logo">
+  </div>`;
+}
+
+/* ---------------- TABS PER ROLE ---------------- */
+function getTabs(){
+  const r = S.user.role;
+  const all = [{k:'home', ic:'🏠', t:'الرئيسية'}];
+  if(r==='requester' || r==='admin') all.push({k:'new', ic:'➕', t:'طلب جديد'});
+  if(r==='warehouse' || r==='admin') all.push({k:'incoming', ic:'📥', t:'توريد وارد'});
+  if(r==='warehouse' || r==='distribution' || r==='admin') all.push({k:'tasks', ic:'🧾', t:'المهام'});
+  all.push({k:'orders', ic:'🔍', t:'الطلبات'});
+  all.push({k:'products', ic:'📦', t:'الأرصدة'});
+  if(r==='accounts' || r==='admin') all.push({k:'reports', ic:'📊', t:'التقارير'});
+  if(r==='admin') all.push({k:'admin', ic:'⚙️', t:'الإدارة'});
+  return all;
+}
+
+/* ---------------- SHELL ---------------- */
+function rShell(){
+  const u = S.user;
+  if(!dbReady){
+    return `<div class="welcome"><img class="wlogo" src="${LOGO}" alt="IFT"><h1 style="font-size:18px;">جارِ تحميل بياناتك...</h1></div>`;
+  }
+  let body='';
+  if(S.tab==='home') body = rHome();
+  else if(S.tab==='new') body = rNewRequest();
+  else if(S.tab==='incoming') body = rIncoming();
+  else if(S.tab==='tasks') body = rTasks();
+  else if(S.tab==='orders') body = rOrders();
+  else if(S.tab==='products') body = rProducts();
+  else if(S.tab==='reports') body = rReports();
+  else if(S.tab==='admin') body = rAdmin();
+  return `
+  <div class="topbar">
+    <div class="brand"><img class="tlogo" src="${topbarLogo(u)}" alt="logo">${avatarHTML(u,28)}
+      <div><div class="tname">${u.name}${u.sector?` · ${u.sector}`:''}</div><div class="trole">${ROLE_LABEL[u.role]}</div></div>
+    </div>
+    <button class="logout" data-a="logout">خروج</button>
+  </div>
+  <div class="body-scroll">${body}</div>
+  <div class="tabbar">${getTabs().map(t=>`<button data-a="tab" data-tab="${t.k}" class="${S.tab===t.k?'active':''}"><span class="ic">${t.ic}</span>${t.t}</button>`).join('')}</div>
+  `;
+}
+
+/* ---------------- HOME ---------------- */
+function rHome(){
+  const u = S.user;
+  const myReqs = DB.requests.filter(r=> r.createdBy===u.username );
+  const pendingWh = DB.requests.filter(r=>r.status==='pending_warehouse');
+  const myTasks = DB.requests.filter(r=> r.status==='assigned_distribution' && r.assignedTo===u.username );
+  const lowStock = DB.products.filter(p=>p.stock>0 && p.stock<=5).length;
+  const zeroStock = DB.products.filter(p=>p.stock<=0).length;
+
+  let quick = '';
+  if(u.role==='requester' || u.role==='admin'){
+    quick += `<div class="kpi-row"><div class="kpi"><b>${myReqs.length}</b><span>طلباتي</span></div><div class="kpi"><b>${myReqs.filter(r=>r.status==='delivered').length}</b><span>تم التسليم</span></div></div>`;
+  }
+  if(u.role==='warehouse' || u.role==='admin'){
+    quick += `<div class="kpi-row"><div class="kpi"><b>${pendingWh.length}</b><span>طلبات بانتظار المخزن</span></div><div class="kpi"><b>${zeroStock}</b><span>أصناف نفدت</span></div></div>`;
+  }
+  if(u.role==='distribution' || u.role==='admin'){
+    quick += `<div class="kpi-row"><div class="kpi"><b>${myTasks.length}</b><span>مهام تسليم لديك</span></div><div class="kpi"><b>${DB.requests.filter(r=>r.status==='delivered'&&r.assignedTo===u.username).length}</b><span>تم تسليمها</span></div></div>`;
+  }
+  quick += `<div class="kpi-row"><div class="kpi"><b>${DB.products.length}</b><span>إجمالي الأصناف</span></div><div class="kpi"><b>${lowStock}</b><span>أصناف منخفضة</span></div></div>`;
+
+  const recent = [...DB.requests].sort((a,b)=>b.createdAt-a.createdAt).slice(0,5);
+
+  return `
+  <div class="section-title">👋 أهلاً ${u.name}</div>
+  ${quick}
+  <div class="section-title">📋 آخر الطلبات — تتبع الحالة</div>
+  ${recent.length===0?'<div class="empty-state">لا توجد طلبات بعد</div>':recent.map(reqCardHTML).join('')}
+  `;
+}
+
+function reqCardHTML(r){
+  const itemsHTML = r.items.map(it=>`<div><span>${it.name}</span><span>${it.qty} ${it.unit}</span></div>`).join('');
+  return `<div class="req-card">
+    <div class="rh"><b>${r.doctorName}</b><span class="pill ${statusPillClass(r.status)}">${statusLabel(r.status)}</span></div>
+    <div class="meta">طلب رقم ${r.id.slice(-6)} — ${fmtDateTime(r.createdAt)} — بواسطة ${r.createdByName} — قطاع ${reqSector(r)}</div>
+    ${trackerHTML(r)}
+    <div class="req-items">${itemsHTML}</div>
+    ${r.place?`<div class="meta">📍 مكان التسليم: ${r.place}</div>`:''}
+    ${r.notes?`<div class="meta">ملاحظات: ${r.notes}</div>`:''}
+    ${r.status==='rejected' && r.rejectReason?`<div class="meta" style="color:var(--bad);">سبب الرفض: ${r.rejectReason}</div>`:''}
+  </div>`;
+}
+
+function KpiCard(){}
+function PanelHead(){}
+
+/* ---------------- NEW REQUEST ---------------- */
+let newReqItems = [{productId:'', qty:1}];
+let newReqForm = { doctor:'', region:'بدون تحديد', place:'', notes:'' };
+function rNewRequest(){
+  const prods = visibleProducts();
+  const u = S.user;
+  const itemsHTML = newReqItems.map((it,i)=>{
+    const p = it.productId ? findProduct(+it.productId) : null;
+    return `
+    <div class="item-row" style="align-items:center;">
+      <button type="button" class="item-picker-btn" data-a="open-picker" data-idx="${i}" style="flex:2;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:6px 8px;text-align:right;">
+        ${p ? `
+          <span style="width:32px;height:32px;border-radius:7px;overflow:hidden;background:var(--blue-lg);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--blue2);flex-shrink:0;">${p.photo?`<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;">`:p.name.trim()[0]}</span>
+          <span style="font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.name}</span>
+        ` : `<span style="font-size:12.5px;color:var(--muted);">📷 اختر صنف (بالصورة)</span>`}
+      </button>
+      <input type="number" min="1" class="ni-qty" data-idx="${i}" value="${it.qty}" style="flex:1;">
+      <button data-a="rm-item" data-idx="${i}">×</button>
+    </div>`;
+  }).join('');
+  return `
+  <div class="section-title">➕ طلب صرف جديد ${u.sector?`— قطاع ${u.sector}`:''}</div>
+  <div class="form-box">
+    <div class="field"><label>اسم الطبيب / العيادة</label>
+      <select id="nr-doctor">
+        <option value="">اختر طبيب</option>
+        ${DB.doctors.map(d=>`<option value="${d}" ${newReqForm.doctor===d?'selected':''}>${d}</option>`).join('')}
+        <option value="__new__">+ إضافة طبيب جديد...</option>
+      </select>
+    </div>
+    <div class="field" style="margin-top:10px;"><label>المنطقة</label>
+      <select id="nr-region">${REGIONS.map(r=>`<option value="${r}" ${newReqForm.region===r?'selected':''}>${r}</option>`).join('')}</select>
+    </div>
+    <div class="field" style="margin-top:10px;"><label>مكان التسليم بالتفصيل (اختياري)</label><input id="nr-place" value="${newReqForm.place}" placeholder="مثال: عيادة النور - شارع التسعين، التجمع الخامس"></div>
+    <div style="margin-top:14px;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:8px;">الأصناف المطلوبة ${u.sector?`(أصناف قطاع ${u.sector} فقط)`:''}</div>
+    ${prods.length===0?'<div class="empty-state">لا توجد أصناف متاحة لقطاعك حالياً</div>':itemsHTML}
+    ${prods.length>0?`<button class="add-item-btn" data-a="add-item">+ إضافة صنف آخر</button>`:''}
+    <div class="field"><label>ملاحظات (اختياري)</label><textarea id="nr-notes" rows="2" placeholder="أي تفاصيل إضافية">${newReqForm.notes}</textarea></div>
+    <button class="btn-primary" style="margin-top:14px;max-width:100%;" data-a="submit-request">إرسال الطلب للمخزن</button>
+  </div>
+  `;
+}
+
+/* ---------------- INCOMING STOCK ---------------- */
+function rIncoming(){
+  const recent = [...DB.movements].sort((a,b)=>b.date-a.date).slice(0,15);
+  return `
+  <div class="section-title">📥 تسجيل توريد وارد</div>
+  <div class="form-box">
+    <div class="field"><label>الصنف</label><select id="in-prod">
+      <option value="">اختر صنف</option>
+      ${DB.products.map(p=>`<option value="${p.id}">${p.name} (الرصيد الحالي ${p.stock})</option>`).join('')}
+    </select></div>
+    <div class="field" style="margin-top:10px;"><label>الكمية الواردة</label><input type="number" min="1" id="in-qty" value="1"></div>
+    <div class="field" style="margin-top:10px;"><label>مصدر التوريد</label>
+      <div class="radio-group" id="in-source-group">
+        <div class="radio-opt sel" data-src="المقطم">مخزن المقطم</div>
+        <div class="radio-opt" data-src="التجمع">مخزن التجمع</div>
+        <div class="radio-opt" data-src="خارجي">توريد خارجي</div>
+      </div>
+    </div>
+    <div class="field"><label>اسم المورد</label>
+      <select id="in-supplier">
+        <option value="">بدون تحديد</option>
+        ${DB.suppliers.map(s=>`<option value="${s}">${s}</option>`).join('')}
+        <option value="__new__">+ إضافة مورد جديد...</option>
+      </select>
+    </div>
+    <div class="field" style="margin-top:10px;"><label>طالب التوريد</label>
+      <select id="in-requester">${DB.users.map(u=>`<option value="${u.name}" ${u.username===S.user.username?'selected':''}>${u.name}</option>`).join('')}</select>
+    </div>
+    <div class="field" style="margin-top:10px;"><label>المستلم فعليًا</label>
+      <select id="in-receiver">${DB.users.map(u=>`<option value="${u.name}" ${u.username===S.user.username?'selected':''}>${u.name}</option>`).join('')}</select>
+    </div>
+    <div class="field" style="margin-top:10px;"><label>ملاحظات</label><input id="in-notes" placeholder="اختياري"></div>
+    <button class="btn-primary" style="margin-top:14px;max-width:100%;" data-a="submit-incoming">تسجيل التوريد</button>
+  </div>
+  <div class="section-title">🕓 آخر حركات التوريد</div>
+  ${recent.length===0?'<div class="empty-state">لا توجد حركات توريد بعد</div>':recent.map(m=>`
+    <div class="req-card"><div class="rh"><b>${m.name}</b><span class="pill dist">${m.source}</span></div>
+    <div class="meta">${fmtDateTime(m.date)} ${m.supplier?(' — المورد: '+m.supplier):''}</div>
+    <div class="meta">طالب التوريد: ${m.requestedBy||m.byName} — المستلم: ${m.receivedBy||m.byName}</div>
+    <div class="req-items"><div><span>الكمية الواردة</span><span>+${m.qty}</span></div></div>
+    ${m.notes?`<div class="meta">${m.notes}</div>`:''}</div>
+  `).join('')}
+  `;
+}
+
+/* ---------------- TASKS (WAREHOUSE / DISTRIBUTION) ---------------- */
+function rTasks(){
+  const u = S.user;
+  let list = [];
+  if(u.role==='warehouse' || u.role==='admin'){
+    list = list.concat(DB.requests.filter(r=>r.status==='pending_warehouse').map(r=>({r, kind:'wh'})));
+  }
+  if(u.role==='distribution' || u.role==='admin'){
+    const filt = u.role==='admin' ? (r=>r.status==='assigned_distribution') : (r=>r.status==='assigned_distribution' && r.assignedTo===u.username);
+    list = list.concat(DB.requests.filter(filt).map(r=>({r, kind:'dist'})));
+  }
+  list.sort((a,b)=>a.r.createdAt-b.r.createdAt);
+
+  if(list.length===0) return `<div class="section-title">🧾 المهام</div><div class="empty-state">لا توجد مهام بانتظارك حالياً 🎉</div>`;
+
+  return `<div class="section-title">🧾 المهام بانتظار إجراء</div>` + list.map(({r,kind})=>{
+    const itemsHTML = r.items.map(it=>`<div><span>${it.name}</span><span>${it.qty} ${it.unit}</span></div>`).join('');
+    let actions = '';
+    if(kind==='wh'){
+      actions = `<div class="req-actions">
+        <button class="btn-s g" data-a="wh-direct" data-id="${r.id}">تسليم مباشر للدكتور</button>
+        <button class="btn-s b" data-a="wh-assign" data-id="${r.id}">إرسال لمندوب توزيع</button>
+        <button class="btn-s r" data-a="wh-reject" data-id="${r.id}">رفض</button>
+      </div>`;
+    } else {
+      actions = `<div class="req-actions"><button class="btn-s g" data-a="dist-deliver" data-id="${r.id}">تم التسليم للدكتور</button></div>`;
+    }
+    return `<div class="req-card">
+      <div class="rh"><b>${r.doctorName}</b><span class="pill ${statusPillClass(r.status)}">${statusLabel(r.status)}</span></div>
+      <div class="meta">طلب رقم ${r.id.slice(-6)} — ${fmtDateTime(r.createdAt)} — بواسطة ${r.createdByName}${r.region?(' — '+r.region):''}</div>
+      ${trackerHTML(r)}
+      <div class="req-items">${itemsHTML}</div>
+      ${r.place?`<div class="meta">📍 ${r.place}</div>`:''}
+      ${r.notes?`<div class="meta">ملاحظات: ${r.notes}</div>`:''}
+      ${actions}
+    </div>`;
+  }).join('');
+}
+
+/* ---------------- ORDERS (searchable full history) ---------------- */
+let ordersSearch = '';
+let ordersDateFilter = '';
+function reqSector(r){
+  const first = r.items && r.items[0];
+  return (first && (findProduct(first.productId)||{}).sector) || r.sector || 'عام';
+}
+function activityDates(){
+  const set = new Set();
+  DB.requests.forEach(r=>{ set.add(new Date(r.createdAt).toISOString().slice(0,10)); });
+  return [...set].sort((a,b)=>b.localeCompare(a));
+}
+function ordersFiltered(){
+  const u = S.user;
+  let list = DB.requests;
+  if(u.role==='requester'){ list = list.filter(r=>r.createdBy===u.username); }
+  if(ordersDateFilter){
+    list = list.filter(r=> new Date(r.createdAt).toISOString().slice(0,10) === ordersDateFilter );
+  }
+  if(ordersSearch){
+    const q = ordersSearch.toLowerCase();
+    list = list.filter(r=>{
+      const hay = [reqSector(r), r.doctorName, r.createdByName, r.place, ...(r.items||[]).map(it=>it.name)].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }
+  return [...list].sort((a,b)=>b.createdAt-a.createdAt);
+}
+function rOrders(){
+  const dates = activityDates();
+  const filtered = ordersFiltered();
+  return `
+  <div class="section-title">🔍 بحث الطلبات</div>
+  <div class="search-bar"><input id="ord-search" placeholder="ابحث بالقطاع، الدكتور، الطالب، أو المنتج..." value="${ordersSearch}"></div>
+  <div class="field" style="margin-bottom:12px;">
+    <label>اليوم (الأيام اللي فيها حركات فقط)</label>
+    <select id="ord-date-filter">
+      <option value="">كل الأيام (${DB.requests.length})</option>
+      ${dates.map(d=>{
+        const cnt = DB.requests.filter(r=>new Date(r.createdAt).toISOString().slice(0,10)===d).length;
+        const label = new Date(d).toLocaleDateString('ar-EG',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});
+        return `<option value="${d}" ${ordersDateFilter===d?'selected':''}>${label} — ${cnt} حركة</option>`;
+      }).join('')}
+    </select>
+  </div>
+  <div id="orders-list">${filtered.length===0?'<div class="empty-state">لا توجد طلبات مطابقة</div>':filtered.map(reqCardHTML).join('')}</div>
+  `;
+}
+function renderOrdersOnly(){
+  const list = document.getElementById('orders-list');
+  if(list) list.innerHTML = ordersFiltered().length===0?'<div class="empty-state">لا توجد طلبات مطابقة</div>':ordersFiltered().map(reqCardHTML).join('');
+}
+
+/* ---------------- PRODUCTS / BALANCES ---------------- */
+let productSearch = '';
+function rProducts(){
+  const u = S.user;
+  const canEdit = u.role==='admin' || u.role==='warehouse';
+  const base = visibleProducts();
+  const filtered = base.filter(p=> !productSearch || p.name.includes(productSearch) || (p.sector||'').toLowerCase().includes(productSearch.toLowerCase()) );
+  const shown = filtered.slice(0,120);
+  return `
+  <div class="section-title">📦 أرصدة الأصناف ${u.sector?`— قطاع ${u.sector}`:''} (${filtered.length})</div>
+  <div class="search-bar"><input id="prod-search" placeholder="ابحث بالاسم أو القطاع..." value="${productSearch}"></div>
+  <div class="prod-grid">
+    ${shown.map(p=>`
+    <div class="prod-card">
+      <div class="prod-photo">
+        ${p.photo? `<img src="${p.photo}">` : (p.name||'?').trim()[0]}
+        ${canEdit?`<label class="up-btn">رفع صورة<input type="file" accept="image/*" data-a="upload-photo" data-id="${p.id}" style="display:none;"></label>`:''}
+      </div>
+      <div class="prod-info">
+        <div class="pn">${p.name}</div>
+        <div class="ps">${p.sector||''}</div>
+        <div class="pq ${p.stock<=0?'low':(p.stock<=5?'low':'ok')}">الرصيد: ${p.stock} ${p.unit}</div>
+      </div>
+    </div>`).join('')}
+  </div>
+  ${filtered.length>120?`<div class="empty-state">يعرض أول 120 نتيجة — استخدم البحث لتضييق النتائج (${filtered.length} إجمالي)</div>`:''}
+  `;
+}
+
+/* ---------------- REPORTS ---------------- */
+let repTab = 'summary';
+function buildIncomingRows(){
+  return DB.movements.map(m=>({
+    'التاريخ والوقت': fmtDateTime(m.date),
+    'المورد': m.supplier || '—',
+    'الصنف': m.name,
+    'القطاع': (findProduct(m.productId)||{}).sector || 'عام',
+    'الطالب': m.requestedBy || m.byName || '—',
+    'المستلم': m.receivedBy || m.byName || '—',
+    'الكمية': m.qty
+  })).sort((a,b)=> 0);
+}
+function buildDeliveryRows(){
+  return DB.requests.filter(r=>r.status==='delivered').map(r=>{
+    const sector = (findProduct(r.items[0] && r.items[0].productId)||{}).sector || r.sector || 'عام';
+    const qtyTotal = r.items.reduce((s,it)=>s+Number(it.qty||0),0);
+    const itemNames = r.items.map(it=>it.name).join('، ');
+    return {
+      'التاريخ': fmtDateTime(r.deliveredAt||r.createdAt),
+      'الصنف': itemNames,
+      'القطاع': sector,
+      'الكمية': qtyTotal,
+      'الطالب': r.createdByName,
+      'مكان التسليم': r.place || r.doctorName || r.region || '—',
+      'من سلّم': r.deliveredBy ? (DB.users.find(u=>u.username===r.deliveredBy)||{}).name || r.deliveredBy : '—'
+    };
+  });
+}
+function rReports(){
+  const totalReq = DB.requests.length;
+  const delivered = DB.requests.filter(r=>r.status==='delivered').length;
+  const pending = DB.requests.filter(r=>r.status==='pending_warehouse').length;
+  const inTransit = DB.requests.filter(r=>r.status==='assigned_distribution').length;
+  const rejected = DB.requests.filter(r=>r.status==='rejected').length;
+  const totalIn = DB.movements.reduce((s,m)=>s+Number(m.qty||0),0);
+
+  const inRows = buildIncomingRows();
+  const outRows = buildDeliveryRows();
+
+  return `
+  <div class="section-title">📊 التقارير</div>
+  <div class="kpi-row">
+    <div class="kpi"><b>${totalReq}</b><span>إجمالي الطلبات</span></div>
+    <div class="kpi"><b>${delivered}</b><span>تم التسليم</span></div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi"><b>${pending}</b><span>بانتظار المخزن</span></div>
+    <div class="kpi"><b>${inTransit}</b><span>قيد التسليم</span></div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi"><b>${rejected}</b><span>مرفوضة</span></div>
+    <div class="kpi"><b>${totalIn}</b><span>إجمالي الوارد للمخزن</span></div>
+  </div>
+
+  <div class="rep-tabs">
+    <div class="radio-opt ${repTab==='in'?'sel':''}" data-a="rep-tab" data-t="in" style="flex:1;">تقرير التوريد (${inRows.length})</div>
+    <div class="radio-opt ${repTab==='out'?'sel':''}" data-a="rep-tab" data-t="out" style="flex:1;">تقرير الصرف (${outRows.length})</div>
+  </div>
+
+  ${repTab==='in' ? renderReportTable(inRows, 'تقرير-التوريد') : renderReportTable(outRows, 'تقرير-الصرف-والتسليم')}
+  `;
+}
+function renderReportTable(rows, filenameBase){
+  if(rows.length===0) return '<div class="empty-state">لا توجد بيانات لعرضها بعد</div>';
+  const cols = Object.keys(rows[0]);
+  return `
+  <div class="export-row">
+    <button class="btn-s g" data-a="export-excel" data-file="${filenameBase}">⬇️ تصدير Excel</button>
+    <button class="btn-s b" data-a="export-print" data-file="${filenameBase}">🖨️ طباعة / PDF</button>
+  </div>
+  <div class="report-table-wrap">
+    <table class="rep-table" id="rep-table-current">
+      <thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${r[c]}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>
+  </div>
+  `;
+}
+function exportExcel(rows, filenameBase){
+  if(!window.XLSX){ toast('تعذر تحميل مكتبة Excel — تأكد من الاتصال بالإنترنت'); return; }
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'تقرير');
+  XLSX.writeFile(wb, filenameBase + '.xlsx');
+}
+function printReport(rows, title){
+  if(rows.length===0){ toast('لا توجد بيانات للطباعة'); return; }
+  const cols = Object.keys(rows[0]);
+  const w = window.open('', '_blank');
+  w.document.write(`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>${title}</title>
+  <style>
+    body{font-family:Tahoma,Arial,sans-serif;padding:20px;direction:rtl;}
+    h2{text-align:center;color:#0B3866;margin-bottom:16px;}
+    table{width:100%;border-collapse:collapse;font-size:12px;}
+    th,td{border:1px solid #ccc;padding:6px 8px;text-align:right;}
+    th{background:#E8EFF8;color:#0B3866;}
+  </style></head><body>
+  <h2>IFT Corporation — ${title}</h2>
+  <table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
+  <tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>{ w.print(); }, 300);
+}
+
+/* ---------------- ADMIN ---------------- */
+let adminTab = 'users';
+function rAdmin(){
+  return `
+  <div class="section-title">⚙️ الإدارة</div>
+  <div class="radio-group">
+    <div class="radio-opt ${adminTab==='users'?'sel':''}" data-a="admin-tab" data-t="users">المستخدمين</div>
+    <div class="radio-opt ${adminTab==='products'?'sel':''}" data-a="admin-tab" data-t="products">إضافة صنف</div>
+    <div class="radio-opt ${adminTab==='logos'?'sel':''}" data-a="admin-tab" data-t="logos">شعارات القطاعات</div>
+  </div>
+  ${adminTab==='users'? rAdminUsers() : adminTab==='logos' ? rAdminLogos() : rAdminAddProduct()}
+  `;
+}
+function rAdminUsers(){
+  const sectors = getSectors();
+  return `
+  <div class="form-box">
+    <div style="font-size:12px;font-weight:800;margin-bottom:10px;">إضافة مستخدم جديد</div>
+    <div class="field"><label>صورة المستخدم (اختياري)</label><input type="file" accept="image/*" id="au-photo"></div>
+    <div class="field" style="margin-top:8px;"><label>اسم المستخدم (للدخول)</label><input id="au-username"></div>
+    <div class="field" style="margin-top:8px;"><label>كلمة المرور</label><input id="au-password"></div>
+    <div class="field" style="margin-top:8px;"><label>الاسم الظاهر</label><input id="au-name"></div>
+    <div class="field" style="margin-top:8px;"><label>الدور</label>
+      <select id="au-role">
+        <option value="requester">طالب</option>
+        <option value="warehouse">أمين مخزن</option>
+        <option value="distribution">مندوب توزيع</option>
+        <option value="accounts">حسابات</option>
+        <option value="admin">مدير النظام (كافة الصلاحيات)</option>
+      </select>
+    </div>
+    <div class="field" id="au-sector-field" style="margin-top:8px;">
+      <label>القطاع / الشركة (يرى الطالب أصناف وأرصدة قطاعه فقط)</label>
+      <select id="au-sector">
+        ${sectors.map(s=>`<option value="${s}">${s}</option>`).join('')}
+      </select>
+    </div>
+    <button class="btn-primary" style="margin-top:12px;max-width:100%;" data-a="add-user">إضافة المستخدم</button>
+  </div>
+  <div class="section-title">👥 المستخدمين الحاليين (${DB.users.length})</div>
+  ${DB.users.map(u=>`
+    <div class="user-row">
+      ${avatarHTML(u,38)}
+      <div class="user-body"><b>${u.name}</b><span>@${u.username}${u.sector?(' · '+u.sector):''}</span></div>
+      <span class="role-badge">${ROLE_LABEL[u.role]}</span>
+      <button class="btn-s o" data-a="edit-user" data-un="${u.username}">تعديل</button>
+      ${u.username!=='admin'?`<button class="btn-s r" data-a="del-user" data-un="${u.username}">حذف</button>`:''}
+    </div>
+  `).join('')}
+  `;
+}
+function rAdminLogos(){
+  const sectors = getSectors();
+  return `
+  <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.8;">
+    ارفع شعار خاص بكل قطاع/شركة — هيظهر للطالب التابع لهذا القطاع في الشريط العلوي بدل شعار IFT العام.
+  </div>
+  ${sectors.map(s=>`
+    <div class="sector-logo-row">
+      <div class="sector-logo-box">${DB.sectorLogos[s]?`<img src="${DB.sectorLogos[s]}">`:s.trim()[0]}</div>
+      <div class="user-body"><b>${s}</b><span>${DB.sectorLogos[s]?'شعار مرفوع':'بدون شعار — يستخدم الافتراضي'}</span></div>
+      <label class="btn-s o">رفع شعار<input type="file" accept="image/*" data-a="upload-sector-logo" data-sector="${s}" style="display:none;"></label>
+    </div>
+  `).join('')}
+  `;
+}
+function rAdminAddProduct(){
+  return `
+  <div class="form-box">
+    <div style="font-size:12px;font-weight:800;margin-bottom:10px;">إضافة صنف جديد</div>
+    <div class="field"><label>اسم الصنف</label><input id="ap-name"></div>
+    <div class="field" style="margin-top:8px;"><label>القطاع</label><input id="ap-sector" placeholder="مثال: Bivetra"></div>
+    <div class="field" style="margin-top:8px;"><label>الوحدة</label><input id="ap-unit" value="Each"></div>
+    <div class="field" style="margin-top:8px;"><label>الرصيد الافتتاحي</label><input type="number" id="ap-stock" value="0"></div>
+    <button class="btn-primary" style="margin-top:12px;max-width:100%;" data-a="add-product">إضافة الصنف</button>
+  </div>
+  `;
+}
+
+/* ============================== EVENTS ============================== */
+function bindEvents(){
+  document.querySelectorAll('[data-a]').forEach(el=>{
+    if(el.tagName==='INPUT' && el.type==='file') return;
+    el.addEventListener('click', onAction);
+  });
+  document.querySelectorAll('input[data-a="upload-photo"]').forEach(el=>{ el.addEventListener('change', onUploadPhoto); });
+  document.querySelectorAll('input[data-a="upload-sector-logo"]').forEach(el=>{ el.addEventListener('change', onUploadSectorLogo); });
+  const sif = document.getElementById('sif');
+  if(sif) sif.addEventListener('submit', onSignIn);
+  const ps = document.getElementById('prod-search');
+  if(ps) ps.addEventListener('input', e=>{ productSearch = e.target.value; renderProductsOnly(); });
+  document.querySelectorAll('.ni-qty').forEach(el=>{
+    el.addEventListener('change', e=>{
+      const idx = +e.target.dataset.idx;
+      newReqItems[idx].qty = +e.target.value || 1;
+    });
+  });
+  document.querySelectorAll('#in-source-group .radio-opt').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      document.querySelectorAll('#in-source-group .radio-opt').forEach(x=>x.classList.remove('sel'));
+      el.classList.add('sel');
+    });
+  });
+  const nrDoctor = document.getElementById('nr-doctor');
+  if(nrDoctor) nrDoctor.addEventListener('change', onDoctorSelectChange);
+  const nrRegion = document.getElementById('nr-region');
+  if(nrRegion) nrRegion.addEventListener('change', e=>{ newReqForm.region = e.target.value; });
+  const nrPlace = document.getElementById('nr-place');
+  if(nrPlace) nrPlace.addEventListener('input', e=>{ newReqForm.place = e.target.value; });
+  const nrNotes = document.getElementById('nr-notes');
+  if(nrNotes) nrNotes.addEventListener('input', e=>{ newReqForm.notes = e.target.value; });
+  const inSupplier = document.getElementById('in-supplier');
+  if(inSupplier) inSupplier.addEventListener('change', onSupplierSelectChange);
+  const ordDate = document.getElementById('ord-date-filter');
+  if(ordDate) ordDate.addEventListener('change', e=>{ ordersDateFilter = e.target.value; render(); });
+  const ordSearch = document.getElementById('ord-search');
+  if(ordSearch) ordSearch.addEventListener('input', e=>{ ordersSearch = e.target.value; renderOrdersOnly(); });
+  const auRole = document.getElementById('au-role');
+  if(auRole){ auRole.addEventListener('change', toggleSectorField); toggleSectorField(); }
+}
+function toggleSectorField(){
+  const roleSel = document.getElementById('au-role');
+  const sectorField = document.getElementById('au-sector-field');
+  if(!roleSel || !sectorField) return;
+  sectorField.style.display = roleSel.value==='requester' ? 'block' : 'none';
+}
+function onDoctorSelectChange(e){
+  if(e.target.value==='__new__'){
+    const name = prompt('اكتب اسم الطبيب / العيادة الجديد:');
+    if(name && name.trim()){
+      DB.doctors.push(name.trim());
+      saveDoctors();
+      newReqForm.doctor = name.trim();
+      render();
+    } else { e.target.value = newReqForm.doctor||''; }
+  } else {
+    newReqForm.doctor = e.target.value;
+  }
+}
+function onSupplierSelectChange(e){
+  if(e.target.value==='__new__'){
+    const name = prompt('اكتب اسم المورد الجديد:');
+    if(name && name.trim()){
+      DB.suppliers.push(name.trim());
+      saveSuppliers();
+      render();
+      setTimeout(()=>{ const sel=document.getElementById('in-supplier'); if(sel) sel.value = name.trim(); }, 0);
+    } else { e.target.value = ''; }
+  }
+}
+function renderProductsOnly(){
+  document.querySelector('.body-scroll').innerHTML = rProducts();
+  bindEvents();
+}
+
+function onAction(e){
+  const a = e.currentTarget.dataset.a;
+  const id = e.currentTarget.dataset.id;
+  if(a==='go-si'){ stopAmbient(); S.screen='signin'; render(); }
+  else if(a==='toggle-sound'){ toggleAmbient(); }
+  else if(a==='logout'){ stopAmbient(); S.user=null; S.screen='welcome'; S.tab='home'; render(); }
+  else if(a==='tab'){ S.tab = e.currentTarget.dataset.tab; render(); }
+  else if(a==='add-item'){ newReqItems.push({productId:'',qty:1}); render(); }
+  else if(a==='rm-item'){ const idx=+e.currentTarget.dataset.idx; newReqItems.splice(idx,1); if(newReqItems.length===0) newReqItems=[{productId:'',qty:1}]; render(); }
+  else if(a==='submit-request'){ submitNewRequest(); }
+  else if(a==='submit-incoming'){ submitIncoming(); }
+  else if(a==='wh-direct'){ warehouseDirectDeliver(id); }
+  else if(a==='wh-assign'){ openAssignModal(id); }
+  else if(a==='wh-reject'){ warehouseReject(id); }
+  else if(a==='dist-deliver'){ distDeliver(id); }
+  else if(a==='admin-tab'){ adminTab = e.currentTarget.dataset.t; render(); }
+  else if(a==='add-user'){ addUser(); }
+  else if(a==='del-user'){ delUser(e.currentTarget.dataset.un); }
+  else if(a==='edit-user'){ openEditUserModal(e.currentTarget.dataset.un); }
+  else if(a==='save-edit-user'){ saveEditUser(e.currentTarget.dataset.un); }
+  else if(a==='add-product'){ addProduct(); }
+  else if(a==='confirm-assign'){ confirmAssign(id); }
+  else if(a==='close-modal'){ closeModal(); }
+  else if(a==='open-picker'){ openProductPicker(+e.currentTarget.dataset.idx); }
+  else if(a==='pick-product'){ selectPickedProduct(+e.currentTarget.dataset.idx, +e.currentTarget.dataset.pid); }
+  else if(a==='rep-tab'){ repTab = e.currentTarget.dataset.t; render(); }
+  else if(a==='export-excel'){ exportExcel(repTab==='in'?buildIncomingRows():buildDeliveryRows(), e.currentTarget.dataset.file); }
+  else if(a==='export-print'){ printReport(repTab==='in'?buildIncomingRows():buildDeliveryRows(), repTab==='in'?'تقرير التوريد':'تقرير الصرف والتسليم'); }
+}
+
+function onSignIn(e){
+  e.preventDefault();
+  const un = e.target.un.value.trim();
+  const pw = e.target.pw.value;
+  if(!dbReady){ S.err='البيانات لسه بتتحمّل، حاول تاني بعد ثانيتين'; render(); return; }
+  const u = DB.users.find(x=>x.username===un && x.password===pw);
+  if(!u){ S.err='اسم المستخدم أو كلمة المرور غير صحيحة'; render(); return; }
+  S.user = u; S.err=null; S.screen='shell'; S.tab='home';
+  render();
+}
+
+/* ---- Request creation ---- */
+function submitNewRequest(){
+  const doctorName = (newReqForm.doctor||'').trim();
+  const region = (newReqForm.region||'').trim();
+  const place = (newReqForm.place||'').trim();
+  const notes = (newReqForm.notes||'').trim();
+  const items = newReqItems.filter(it=>it.productId).map(it=>{
+    const p = findProduct(+it.productId);
+    return { productId:+it.productId, name:p.name, unit:p.unit, qty:it.qty };
+  });
+  if(!doctorName || doctorName==='__new__'){ toast('من فضلك اختر اسم الطبيب / العيادة'); return; }
+  if(items.length===0){ toast('أضف صنف واحد على الأقل'); return; }
+  const req = {
+    id: uid('req_'), createdBy:S.user.username, createdByName:S.user.name, createdAt:Date.now(),
+    doctorName, region:(region==='بدون تحديد'?'':region), place, sector:S.user.sector||null, items, notes, status:'pending_warehouse'
+  };
+  DB.requests.push(req); saveRequests();
+  newReqItems = [{productId:'',qty:1}];
+  newReqForm = { doctor:'', region:'بدون تحديد', place:'', notes:'' };
+  toast('تم إرسال الطلب للمخزن بنجاح');
+  S.tab='home'; render();
+}
+
+/* ---- Incoming stock ---- */
+function submitIncoming(){
+  const pid = +document.getElementById('in-prod').value;
+  const qty = +document.getElementById('in-qty').value;
+  const src = document.querySelector('#in-source-group .radio-opt.sel').dataset.src;
+  const supplier = document.getElementById('in-supplier').value.trim();
+  if(supplier==='__new__'){ toast('اختر مورد صحيح'); return; }
+  const requestedBy = document.getElementById('in-requester').value;
+  const receivedBy = document.getElementById('in-receiver').value;
+  const notes = document.getElementById('in-notes').value.trim();
+  if(!pid){ toast('اختر صنف'); return; }
+  if(!qty || qty<=0){ toast('أدخل كمية صحيحة'); return; }
+  const p = findProduct(pid);
+  p.stock += qty;
+  DB.movements.push({ id:uid('mv_'), productId:pid, name:p.name, qty, source:src, supplier, requestedBy, receivedBy, date:Date.now(), by:S.user.username, byName:S.user.name, notes });
+  saveProducts(); saveMovements();
+  toast('تم تسجيل التوريد وتحديث الرصيد');
+  render();
+}
+
+/* ---- Warehouse actions ---- */
+function hasEnoughStock(r){ return r.items.every(it=>{ const p=findProduct(it.productId); return p && p.stock>=it.qty; }); }
+function deductStock(r){ r.items.forEach(it=>{ const p=findProduct(it.productId); if(p) p.stock -= it.qty; }); }
+
+function warehouseDirectDeliver(id){
+  const r = DB.requests.find(x=>x.id===id);
+  if(!hasEnoughStock(r)){ if(!confirm('الرصيد غير كافٍ لبعض الأصناف — هل تريد المتابعة على مسؤوليتك؟')) return; }
+  deductStock(r);
+  r.status='delivered'; r.deliveryMethod='direct'; r.preparedBy=S.user.username; r.preparedAt=Date.now(); r.deliveredBy=S.user.username; r.deliveredAt=Date.now();
+  saveProducts(); saveRequests();
+  toast('تم تسليم الطلب مباشرة للطبيب');
+  render();
+}
+function warehouseReject(id){
+  const reason = prompt('سبب الرفض (اختياري):','نقص في الرصيد');
+  const r = DB.requests.find(x=>x.id===id);
+  r.status='rejected'; r.rejectReason = reason||''; r.preparedBy=S.user.username; r.preparedAt=Date.now();
+  saveRequests();
+  toast('تم رفض الطلب');
+  render();
+}
+function openAssignModal(id){
+  const distUsers = DB.users.filter(u=>u.role==='distribution');
+  const bg = document.createElement('div');
+  bg.className='modal-bg'; bg.id='assign-modal-bg';
+  bg.innerHTML = `<div class="modal" style="position:relative;">
+    <div class="modal-close" data-a="close-modal">×</div>
+    <h3>إسناد التسليم لمندوب توزيع</h3>
+    <div class="field"><label>اختر المندوب</label>
+      <select id="assign-user">${distUsers.map(u=>`<option value="${u.username}">${u.name}</option>`).join('')}</select>
+    </div>
+    <button class="btn-primary" style="margin-top:14px;max-width:100%;" data-a="confirm-assign" data-id="${id}">تأكيد الإسناد</button>
+  </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector('[data-a="close-modal"]').addEventListener('click', closeModal);
+  bg.querySelector('[data-a="confirm-assign"]').addEventListener('click', ()=>confirmAssign(id));
+}
+function closeModal(){
+  ['assign-modal-bg','edit-user-modal-bg','picker-modal-bg'].forEach(id=>{ const m=document.getElementById(id); if(m) m.remove(); });
+}
+let pickerState = { idx:null, search:'' };
+function openProductPicker(idx){
+  pickerState = { idx, search:'' };
+  const bg = document.createElement('div');
+  bg.className='modal-bg'; bg.id='picker-modal-bg';
+  bg.innerHTML = `<div class="modal" style="position:relative;">
+    <div class="modal-close" data-a="close-modal">×</div>
+    <h3>اختر صنف</h3>
+    <div class="search-bar"><input id="picker-search" placeholder="ابحث بالاسم..."></div>
+    <div id="picker-grid" class="prod-grid"></div>
+  </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector('[data-a="close-modal"]').addEventListener('click', closeModal);
+  const searchInput = bg.querySelector('#picker-search');
+  searchInput.addEventListener('input', e=>{ pickerState.search = e.target.value; renderPickerGrid(); });
+  renderPickerGrid();
+}
+function renderPickerGrid(){
+  const grid = document.getElementById('picker-grid');
+  if(!grid) return;
+  const q = pickerState.search.toLowerCase();
+  const prods = visibleProducts().filter(p=> !q || p.name.toLowerCase().includes(q)).slice(0,60);
+  grid.innerHTML = prods.map(p=>`
+    <div class="prod-card" data-a="pick-product" data-idx="${pickerState.idx}" data-pid="${p.id}" style="cursor:pointer;">
+      <div class="prod-photo">${p.photo?`<img src="${p.photo}">`:(p.name||'?').trim()[0]}</div>
+      <div class="prod-info"><div class="pn">${p.name}</div><div class="ps">${p.sector||''}</div><div class="pq ${p.stock<=0?'low':'ok'}">متاح: ${p.stock}</div></div>
+    </div>`).join('') || '<div class="empty-state">لا توجد نتائج</div>';
+  grid.querySelectorAll('[data-a="pick-product"]').forEach(el=> el.addEventListener('click', onAction));
+}
+function selectPickedProduct(idx, pid){
+  newReqItems[idx].productId = pid;
+  closeModal();
+  render();
+}
+function confirmAssign(id){
+  const distUser = document.getElementById('assign-user').value;
+  const r = DB.requests.find(x=>x.id===id);
+  if(!hasEnoughStock(r)){ if(!confirm('الرصيد غير كافٍ لبعض الأصناف — هل تريد المتابعة؟')) return; }
+  deductStock(r);
+  r.status='assigned_distribution'; r.deliveryMethod='distribution'; r.assignedTo=distUser;
+  r.preparedBy=S.user.username; r.preparedAt=Date.now();
+  saveProducts(); saveRequests();
+  closeModal();
+  toast('تم إسناد الطلب لمندوب التوزيع');
+  render();
+}
+function distDeliver(id){
+  const r = DB.requests.find(x=>x.id===id);
+  r.status='delivered'; r.deliveredBy=S.user.username; r.deliveredAt=Date.now();
+  saveRequests();
+  toast('تم تأكيد التسليم للطبيب');
+  render();
+}
+
+/* ---- Admin: users/products/sector logos ---- */
+function resizeImageFile(file, maxDim, quality){
+  return new Promise((resolve)=>{
+    if(!file){ resolve(null); return; }
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      const img = new Image();
+      img.onload = function(){
+        let w = img.width, h = img.height;
+        if(w>h){ if(w>maxDim){ h = Math.round(h*maxDim/w); w = maxDim; } }
+        else { if(h>maxDim){ w = Math.round(w*maxDim/h); h = maxDim; } }
+        const canvas = document.createElement('canvas');
+        canvas.width=w; canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL('image/jpeg',quality||0.75));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+async function addUser(){
+  const username = document.getElementById('au-username').value.trim();
+  const password = document.getElementById('au-password').value;
+  const name = document.getElementById('au-name').value.trim();
+  const role = document.getElementById('au-role').value;
+  const sector = role==='requester' ? document.getElementById('au-sector').value : null;
+  const photoFile = document.getElementById('au-photo').files[0];
+  if(!username || !password || !name){ toast('املأ كل الحقول'); return; }
+  if(DB.users.find(u=>u.username===username)){ toast('اسم المستخدم موجود بالفعل'); return; }
+  const photo = photoFile ? await resizeImageFile(photoFile, 200, 0.8) : null;
+  DB.users.push({username,password,name,role,sector,photo});
+  saveUsers();
+  toast('تمت إضافة المستخدم');
+  render();
+}
+function delUser(un){
+  if(!confirm('حذف هذا المستخدم؟')) return;
+  DB.users = DB.users.filter(u=>u.username!==un);
+  saveUsers();
+  render();
+}
+function openEditUserModal(un){
+  const u = DB.users.find(x=>x.username===un);
+  if(!u) return;
+  const sectors = getSectors();
+  const bg = document.createElement('div');
+  bg.className='modal-bg'; bg.id='edit-user-modal-bg';
+  bg.innerHTML = `<div class="modal" style="position:relative;">
+    <div class="modal-close" data-a="close-modal">×</div>
+    <h3>تعديل المستخدم @${u.username}</h3>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">${avatarHTML(u,54)}
+      <div class="field" style="flex:1;"><label>تغيير الصورة</label><input type="file" accept="image/*" id="eu-photo"></div>
+    </div>
+    <div class="field"><label>الاسم الظاهر</label><input id="eu-name" value="${u.name}"></div>
+    <div class="field" style="margin-top:8px;"><label>كلمة المرور</label><input id="eu-password" value="${u.password}"></div>
+    <div class="field" style="margin-top:8px;"><label>الدور</label>
+      <select id="eu-role">
+        ${['requester','warehouse','distribution','accounts','admin'].map(r=>`<option value="${r}" ${r===u.role?'selected':''}>${ROLE_LABEL[r]}</option>`).join('')}
+      </select>
+    </div>
+    <div class="field" id="eu-sector-field" style="margin-top:8px;${u.role==='requester'?'':'display:none;'}">
+      <label>القطاع / الشركة</label>
+      <select id="eu-sector">${sectors.map(s=>`<option value="${s}" ${s===u.sector?'selected':''}>${s}</option>`).join('')}</select>
+    </div>
+    <button class="btn-primary" style="margin-top:14px;max-width:100%;" data-a="save-edit-user" data-un="${u.username}">حفظ التعديلات</button>
+  </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector('[data-a="close-modal"]').addEventListener('click', closeModal);
+  bg.querySelector('[data-a="save-edit-user"]').addEventListener('click', ()=>saveEditUser(u.username));
+  bg.querySelector('#eu-role').addEventListener('change', (e)=>{
+    document.getElementById('eu-sector-field').style.display = e.target.value==='requester' ? 'block' : 'none';
+  });
+}
+async function saveEditUser(un){
+  const u = DB.users.find(x=>x.username===un);
+  if(!u) return;
+  u.name = document.getElementById('eu-name').value.trim() || u.name;
+  u.password = document.getElementById('eu-password').value || u.password;
+  u.role = document.getElementById('eu-role').value;
+  u.sector = u.role==='requester' ? document.getElementById('eu-sector').value : null;
+  const photoFile = document.getElementById('eu-photo').files[0];
+  if(photoFile){ u.photo = await resizeImageFile(photoFile, 200, 0.8); }
+  await saveUsers();
+  closeModal();
+  if(S.user && S.user.username===u.username) S.user = u;
+  toast('تم حفظ تعديلات المستخدم');
+  render();
+}
+function addProduct(){
+  const name = document.getElementById('ap-name').value.trim();
+  const sector = document.getElementById('ap-sector').value.trim();
+  const unit = document.getElementById('ap-unit').value.trim() || 'Each';
+  const stock = +document.getElementById('ap-stock').value || 0;
+  if(!name){ toast('اكتب اسم الصنف'); return; }
+  const maxId = DB.products.reduce((m,p)=>Math.max(m,p.id),0);
+  DB.products.push({ id:maxId+1, name, sector, unit, stock, photo:null });
+  saveProducts();
+  toast('تمت إضافة الصنف');
+  render();
+}
+
+/* ---- Photo uploads ---- */
+function onUploadPhoto(e){
+  const file = e.target.files[0];
+  const pid = +e.target.dataset.id;
+  if(!file) return;
+  resizeImageFile(file, 260, 0.72).then(dataUrl=>{
+    const p = findProduct(pid);
+    p.photo = dataUrl;
+    saveProducts();
+    toast('تم رفع الصورة');
+    render();
+  });
+}
+function onUploadSectorLogo(e){
+  const file = e.target.files[0];
+  const sector = e.target.dataset.sector;
+  if(!file) return;
+  resizeImageFile(file, 200, 0.85).then(dataUrl=>{
+    DB.sectorLogos[sector] = dataUrl;
+    saveSectorLogos();
+    toast('تم رفع شعار القطاع');
+    render();
+  });
+}
+
+</script>
+</body>
+</html>
