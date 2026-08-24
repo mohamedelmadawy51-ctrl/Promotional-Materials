@@ -173,6 +173,12 @@ table.rep-table td{padding:7px 8px;border-bottom:1px solid #EFEDE4;white-space:n
 @media (max-width: 380px){
   .prod-grid{grid-template-columns:repeat(2,1fr);}
 }
+
+img{cursor:zoom-in;}
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;z-index:99999;cursor:zoom-out;animation:lb-in .15s ease;padding:20px;}
+.lightbox-overlay img{max-width:92vw;max-height:92vh;width:auto;height:auto;object-fit:contain;border-radius:10px;cursor:zoom-out;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+.lightbox-close{position:absolute;top:16px;left:16px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;cursor:pointer;}
+@keyframes lb-in{from{opacity:0;}to{opacity:1;}}
 </style>
 </head>
 <body>
@@ -199,6 +205,7 @@ const REGIONS = ['بدون تحديد','القاهرة','الجيزة','الاس
 
 let DB = { users:SEED_USERS, products:SEED_PRODUCTS, requests:[], movements:[], doctors:SEED_DOCTORS, suppliers:SEED_SUPPLIERS, sectorLogos:{} };
 let dbReady = false;
+let usersReady = false;
 
 let S = { screen:'welcome', user:null, tab:'home', err:null, soundOn:false };
 
@@ -270,22 +277,31 @@ fbAuth.signInAnonymously().catch(function(err){
 
 /* ---------------- STORAGE (Firebase Realtime Database) ---------------- */
 async function loadDB(){
+  // Phase 1: users only — small, so login unlocks almost instantly instead
+  // of waiting on the full product/request/movement history.
   try{
-    const [u,p,r,m,d,sl,sp] = await Promise.all([
-      safeGet('users'), safeGet('products'), safeGet('requests'), safeGet('movements'), safeGet('doctors'), safeGet('sectorLogos'), safeGet('suppliers')
-    ]);
+    const u = await safeGet('users');
     DB.users = u ? JSON.parse(u) : SEED_USERS;
+    if(!u) await fbSet('users', DB.users);
+  }catch(e){ console.error('loadDB (users) error:', e); }
+  usersReady = true;
+  render();
+
+  // Phase 2: everything else, in the background.
+  try{
+    const [p,r,m,d,sl,sp] = await Promise.all([
+      safeGet('products'), safeGet('requests'), safeGet('movements'), safeGet('doctors'), safeGet('sectorLogos'), safeGet('suppliers')
+    ]);
     DB.products = p ? JSON.parse(p) : SEED_PRODUCTS;
     DB.requests = r ? JSON.parse(r) : [];
     DB.movements = m ? JSON.parse(m) : [];
     DB.doctors = d ? JSON.parse(d) : SEED_DOCTORS;
     DB.sectorLogos = sl ? JSON.parse(sl) : {};
     DB.suppliers = sp ? JSON.parse(sp) : SEED_SUPPLIERS;
-    if(!u) await fbSet('users', DB.users);
     if(!p) await fbSet('products', DB.products);
     if(!d) await fbSet('doctors', DB.doctors);
     if(!sp) await fbSet('suppliers', DB.suppliers);
-  }catch(e){ console.error('loadDB error:', e); /* keep seed defaults already set */ }
+  }catch(e){ console.error('loadDB (rest) error:', e); /* keep seed defaults already set */ }
   dbReady = true;
   render();
 }
@@ -315,6 +331,26 @@ function toast(msg){
   el.className='toast-msg'; el.textContent = msg;
   document.body.appendChild(el);
   setTimeout(()=>el.remove(), 2600);
+}
+
+/* ---------------- IMAGE LIGHTBOX (tap any image to zoom full-screen) ---------------- */
+document.addEventListener('click', function(e){
+  if(e.target.closest('.lightbox-overlay')){ closeLightbox(); return; }
+  const img = e.target.closest('img');
+  if(!img) return;
+  if(img.classList.contains('no-zoom')) return;
+  openLightbox(img.src);
+});
+function openLightbox(src){
+  closeLightbox();
+  const ov = document.createElement('div');
+  ov.className = 'lightbox-overlay';
+  ov.innerHTML = `<span class="lightbox-close">✕</span><img src="${src}">`;
+  document.body.appendChild(ov);
+}
+function closeLightbox(){
+  const ex = document.querySelector('.lightbox-overlay');
+  if(ex) ex.remove();
 }
 function statusLabel(st){
   return {pending_warehouse:'بانتظار المخزن', assigned_distribution:'قيد التسليم (توزيع)', delivered:'تم التسليم', rejected:'مرفوض'}[st] || st;
@@ -410,7 +446,7 @@ function rSignIn(){
     <img class="slogo" src="${LOGO}" alt="IFT">
     <h2>تسجيل الدخول</h2>
     <div class="sub">IFT Corporation — مستلزمات الدعاية والمكتبية</div>
-    ${S.err?`<div class="err">${S.err}</div>`:!dbReady?`<div class="info-note">⏳ جارِ تجهيز البيانات في الخلفية...</div>`:''}
+    ${S.err?`<div class="err">${S.err}</div>`:!usersReady?`<div class="info-note">⏳ جارِ تجهيز البيانات في الخلفية...</div>`:''}
     <form id="sif">
       <div class="field"><label>اسم المستخدم</label><input name="un" autocomplete="username" required></div>
       <div class="field"><label>كلمة المرور</label><input type="password" name="pw" autocomplete="current-password" required></div>
@@ -719,8 +755,28 @@ function rProducts(){
 
 /* ---------------- REPORTS ---------------- */
 let repTab = 'summary';
+let repDateFrom = '';
+let repDateTo = '';
+function dayStartMs(dateStr){ const d = new Date(dateStr+'T00:00:00'); return d.getTime(); }
+function dayEndMs(dateStr){ const d = new Date(dateStr+'T23:59:59'); return d.getTime(); }
+function inDateRange(ts){
+  if(!ts) return false;
+  if(repDateFrom && ts < dayStartMs(repDateFrom)) return false;
+  if(repDateTo && ts > dayEndMs(repDateTo)) return false;
+  return true;
+}
+function setLastWeekFilter(){
+  const to = new Date();
+  const from = new Date(); from.setDate(from.getDate()-7);
+  repDateTo = to.toISOString().slice(0,10);
+  repDateFrom = from.toISOString().slice(0,10);
+}
 function buildIncomingRows(){
-  return DB.movements.map(m=>({
+  return DB.movements
+    .filter(m=> (repDateFrom||repDateTo) ? inDateRange(m.date) : true)
+    .slice()
+    .sort((a,b)=> b.date - a.date)
+    .map(m=>({
     'التاريخ والوقت': fmtDateTime(m.date),
     'المورد': m.supplier || '—',
     'الصنف': m.name,
@@ -728,10 +784,15 @@ function buildIncomingRows(){
     'الطالب': m.requestedBy || m.byName || '—',
     'المستلم': m.receivedBy || m.byName || '—',
     'الكمية': m.qty
-  })).sort((a,b)=> 0);
+  }));
 }
 function buildDeliveryRows(){
-  return DB.requests.filter(r=>r.status==='delivered').map(r=>{
+  return DB.requests
+    .filter(r=>r.status==='delivered')
+    .filter(r=> (repDateFrom||repDateTo) ? inDateRange(r.deliveredAt||r.createdAt) : true)
+    .slice()
+    .sort((a,b)=> (b.deliveredAt||b.createdAt) - (a.deliveredAt||a.createdAt))
+    .map(r=>{
     const sector = (findProduct(r.items[0] && r.items[0].productId)||{}).sector || r.sector || 'عام';
     const qtyTotal = r.items.reduce((s,it)=>s+Number(it.qty||0),0);
     const itemNames = r.items.map(it=>it.name).join('، ');
@@ -775,6 +836,18 @@ function rReports(){
   <div class="rep-tabs">
     <div class="radio-opt ${repTab==='in'?'sel':''}" data-a="rep-tab" data-t="in" style="flex:1;">تقرير التوريد (${inRows.length})</div>
     <div class="radio-opt ${repTab==='out'?'sel':''}" data-a="rep-tab" data-t="out" style="flex:1;">تقرير الصرف (${outRows.length})</div>
+  </div>
+
+  <div class="form-box" style="margin:10px 0;padding:10px;">
+    <div style="font-size:12px;font-weight:800;margin-bottom:8px;">تصفية بالتاريخ (تنطبق على التوريد والصرف معًا)</div>
+    <div style="display:flex;gap:8px;">
+      <div class="field" style="flex:1;"><label>من تاريخ</label><input type="date" id="rep-date-from" value="${repDateFrom}"></div>
+      <div class="field" style="flex:1;"><label>إلى تاريخ</label><input type="date" id="rep-date-to" value="${repDateTo}"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button class="btn-s g" data-a="rep-last-week" style="flex:1;">📅 آخر أسبوع</button>
+      <button class="btn-s b" data-a="rep-clear-dates" style="flex:1;">مسح الفلتر</button>
+    </div>
   </div>
 
   ${repTab==='in' ? renderReportTable(inRows, 'تقرير-التوريد') : renderReportTable(outRows, 'تقرير-الصرف-والتسليم')}
@@ -942,6 +1015,10 @@ function bindEvents(){
   if(ordSearch) ordSearch.addEventListener('input', e=>{ ordersSearch = e.target.value; renderOrdersOnly(); });
   const auRole = document.getElementById('au-role');
   if(auRole){ auRole.addEventListener('change', toggleSectorField); toggleSectorField(); }
+  const repFrom = document.getElementById('rep-date-from');
+  if(repFrom) repFrom.addEventListener('change', e=>{ repDateFrom = e.target.value; render(); });
+  const repTo = document.getElementById('rep-date-to');
+  if(repTo) repTo.addEventListener('change', e=>{ repDateTo = e.target.value; render(); });
 }
 function toggleSectorField(){
   const roleSel = document.getElementById('au-role');
@@ -1004,6 +1081,8 @@ function onAction(e){
   else if(a==='open-picker'){ openProductPicker(+e.currentTarget.dataset.idx); }
   else if(a==='pick-product'){ selectPickedProduct(+e.currentTarget.dataset.idx, +e.currentTarget.dataset.pid); }
   else if(a==='rep-tab'){ repTab = e.currentTarget.dataset.t; render(); }
+  else if(a==='rep-last-week'){ setLastWeekFilter(); render(); }
+  else if(a==='rep-clear-dates'){ repDateFrom=''; repDateTo=''; render(); }
   else if(a==='export-excel'){ exportExcel(repTab==='in'?buildIncomingRows():buildDeliveryRows(), e.currentTarget.dataset.file); }
   else if(a==='export-print'){ printReport(repTab==='in'?buildIncomingRows():buildDeliveryRows(), repTab==='in'?'تقرير التوريد':'تقرير الصرف والتسليم'); }
 }
@@ -1012,7 +1091,7 @@ function onSignIn(e){
   e.preventDefault();
   const un = e.target.un.value.trim();
   const pw = e.target.pw.value;
-  if(!dbReady){ S.err='البيانات لسه بتتحمّل، حاول تاني بعد ثانيتين'; render(); return; }
+  if(!usersReady){ S.err='البيانات لسه بتتحمّل، حاول تاني بعد ثانيتين'; render(); return; }
   const u = DB.users.find(x=>x.username===un && x.password===pw);
   if(!u){ S.err='اسم المستخدم أو كلمة المرور غير صحيحة'; render(); return; }
   S.user = u; S.err=null; S.screen='shell'; S.tab='home';
