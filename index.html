@@ -1253,6 +1253,10 @@ function openKpiModal(type){
   </div>`;
   document.body.appendChild(bg);
   bg.querySelector('[data-a="close-modal"]').addEventListener('click', closeModal);
+  const exBtn = bg.querySelector('[data-a="kpi-export-excel"]');
+  if(exBtn) exBtn.addEventListener('click', ()=>exportExcel(kpiModalRows, kpiModalFile));
+  const prBtn = bg.querySelector('[data-a="kpi-export-print"]');
+  if(prBtn) prBtn.addEventListener('click', ()=>printReport(kpiModalRows, kpiModalTitle));
   bg.addEventListener('click', e=>{ if(e.target===bg) closeModal(); });
 }
 let pickerState = { idx:null, search:'' };
